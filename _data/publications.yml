@@ -1,0 +1,57 @@
+- title: "Generalized theta functions, projectively flat vector bundles and noncommutative tori"
+  author: M. Spera and M. Sandoval
+  arxiv: 2205.11235
+  # doi: https://doi.org/
+  # journal:
+  abstract: >
+    In this paper, the well known relationship between theta functions and Heisenberg group actions thereon is resumed by merging complex algebraic and noncommutative geometry: in essence, we describe Hermitian-Einstein vector bundles on 2-tori via representations of noncommutative tori, thereby reconstructing Matsushima's setup and making the ensuing Fourier-Mukai-Nahm (FMN) aspects transparent. We prove the existence of noncommutative torus actions on the space of smooth sections of Hermitian-Einstein vector bundles on 2-tori preserving the eigenspaces of a natural Laplace operator. Motivated by the Coherent State Transform approach to theta functions, we extend the latter to vector valued thetas and develop an additional algebraic reinterpretation of Matsushima's theory making FMN-duality manifest again.
+
+- title: "The noncommutative geometry of the Landau Hamiltonian: Differential aspects"
+  author: G. De Nittis and M. Sandoval
+  doi: https://doi.org/10.1088/1751-8121/ac3da4
+  arxiv: 2106.07506
+  journal: J. Phys. A <b>55</b> (2021)
+  abstract: >
+    In this work we study the differential aspects of the noncommutative geometry for the magnetic $$C^*$$-algebra which is a 2-cocycle deformation of the group $$C^*$$-algebra of R2. This algebra is intimately related to the study of the Quantum Hall Effect in the continuous, and our results aim to provide a new geometric interpretation of the related Kubo's formula. Taking inspiration from the ideas developed by Bellissard during the 80's, we build an appropriate Fredholm module for the magnetic $$C^*$$-algebra based on the magnetic Dirac operator which is the square root (à la Dirac) of the quantum harmonic oscillator. Our main result consist of establishing an important piece of Bellissard's theory, the so-called second Connes' formula. In order to do so, we establish the equality of three cyclic 2-cocycles defined on a dense subalgebra of the magnetic $$C^*$$-algebra. Two of these 2-cocycles are new in the literature and are defined by Connes' quantized differential calculus, with the use of the Dixmier trace and the magnetic Dirac operator.
+
+- title: "The noncommutative geometry of the Landau Hamiltonian: Metric aspects"
+  author: G. De Nittis and M. Sandoval
+  arxiv: 2006.06785
+  doi: https://doi.org/10.3842/SIGMA.2020.146
+  journal: SIGMA <b>16</b> (2020), 146
+  abstract: >
+    This work provides a first step towards the construction of a noncommutative geometry for the quantum Hall effect in the continuum. Taking inspiration from the ideas developed by Bellissard during the 80's we build a spectral triple for the $$C^*$$-algebra of continuous magnetic operators based on a Dirac operator with compact resolvent. The metric aspects of this spectral triple are studied, and an important piece of Bellissard's theory (the so-called first Connes' formula) is proved.
+
+- title: Pseudo-differential operators associated to general type I locally compact groups
+  author: M. Măntoiu and M. Sandoval
+  journal: "Analysis and Partial Differential Equations: Perspectives from Developing Countries, Springer, 2016"
+  doi: https://doi.org/10.1007/978-3-030-05657-5_11
+  arxiv: 2008.08065
+  abstract: >
+    In a recent paper by M. Măntoiu and M. Ruzhansky, a global
+    pseudo-differential calculus has been developed for unimodular groups of type
+    I. In the present article we generalize the main results to arbitrary locally
+    compact groups of type I. Our methods involve the use of Plancherel’s theorem
+    for non-unimodular groups. We also make connections with a $$C^*$$-algebraic
+    formalism, involving dynamical systems, and give explicit constructions for
+    the group of affine transformations of the real line.
+
+- title: Global and Concrete Quantizations on General Type I Groups
+  author: M. Mătoiu and M. Sandoval
+  journal: Monatshefte für Mathematik <b>190</b>(3) (2019), 559-587
+  doi: https://doi.org/10.1007/s00605-019-01312-7
+  arxiv: 1801.06838
+  abstract: >
+    In recent papers and books, a global quantization has been developed for
+    *unimodular* groups of type I. It involves operator-valued symbols defined
+    on the product between the group $$G$$ and its unitary dual $$\widehat G$$,
+    composed of equivalence classes of irreducible representations. For compact
+    or for graded Lie groups, this has already been developed into a powerful
+    pseudo-differential calculus. In the present article we extend the formalism
+    to arbitrary locally compact groups of type I, making use of the Fourier
+    theory of non-unimodular second countable groups. The unitary dual and its
+    Plancherel measure being quite abstract in general, we put into evidence
+    situations in which concrete forms are available. Kirillov theory and
+    parametrizations of large parts of $$\widehat G$$ allow rewriting the basic
+    formulae in a manageable form. Some examples of completely solvable groups
+    are worked out.

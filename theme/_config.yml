@@ -1,0 +1,22 @@
+markdown: kramdown
+sass:
+  style: compressed
+excerpt_separator: <!-- more -->
+permalink: pretty
+
+theme: theme
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-time-to-read
+
+exclude:
+  - vendor
+  - LICENSE
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - gulpfile.js
+  - package.json
+  - theme.gemspec

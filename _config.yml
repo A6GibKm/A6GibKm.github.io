@@ -1,0 +1,21 @@
+title: Maximiliano
+gitlab_username: msandova
+github_username: A6GibKm
+
+theme: theme
+permalink: pretty
+show_excerpts: true
+
+author:
+  name: Maximiliano
+
+exclude:
+  - vendor
+  - LICENSE
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - gulpfile.js
+  - package.json
+  - assets/tex
