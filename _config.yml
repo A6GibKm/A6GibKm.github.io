@@ -1,0 +1,26 @@
+title: Deathwish
+description: Personal blog
+baseurl: ""
+url: "https://deathwish.info"
+github_username: A6GibKm
+
+markdown: kramdown
+kramdown:
+  math_engine: null
+
+sass:
+  style: compressed
+
+excerpt_separator: <!-- more -->
+permalink: pretty
+
+exclude:
+  - vendor
+  - LICENCE
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - gulpfile.js
+  - package.json
+  - assets/tex

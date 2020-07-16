@@ -1,0 +1,218 @@
+@import "vars"
+@import "mixins"
+@import "syntax_highlight"
+
+@charset "UTF-8"
+
+body
+  font-weight: 450
+  font-family: $font
+  letter-spacing: -0.03em
+  font-size: $font-size
+  margin: 2em auto
+  margin-top: 4rem
+  margin-bottom: 4rem
+  max-width: 800px
+  padding: 1em
+  line-height: $line-height
+  align-items: center
+  display: flex
+  flex-direction: column
+  background-color: $background
+  color: $body
+
+/* p
+/*   text-align: justify
+
+@media screen and (max-width: 500px)
+  body
+    text-align: left
+
+ol li
+  counter-increment: list
+  list-style-type: none
+  position: relative
+  &:before
+    font-weight: bolder
+    content: counter(list) "."
+    left: -32px
+    position: absolute
+    text-align: right
+    width: 26px
+
+ol li.publications, ol li.bibliography
+  counter-increment: list
+  &:before
+    content: "[" counter(list) "]"
+    left: -2.1em
+
+nav ul, footer ul
+  font-weight: bold
+  font-size: 1.1 * $font-size
+
+ul li.post-list
+  &:before
+    content: none
+
+nav ul li, footer ul li
+  display: inline
+  margin-right: 25px
+  &:before
+    content: none
+
+a 
+  color: $links
+  text-decoration: underline
+  /* +ease(0.5s)
+  &:hover
+    color: $links-hover
+    font-style: none
+  &:active
+    color: $links
+  nav &, footer &
+    text-decoration: none
+
+button
+    padding: 20px
+    border: 0px
+    border-radius: 5px
+    background: $white
+    &:hover
+        box-shadow: 5px 5px $black
+
+main ul li
+  position: relative
+  list-style-type: none
+  &:before
+    margin-left: -1em
+    content: "* "
+    font-weight: bold
+    font-size: 1.2 * $font-size
+    left: -5px
+    position: absolute
+
+strong, b
+  &:before, &:after
+    content: "**"
+    vertical-align: text-bottom
+
+em, i
+  &:before, &:after
+    content: "*"
+    vertical-align: text-bottom
+
+h1, h2, h3, h4
+  line-height: 0.8 * $line-height
+  &:before
+    letter-spacing: -0.1em
+    margin-right: 0.1em
+
+h1
+    font-size: 2.5em
+    &:before
+      content: "# "
+h2
+    font-size: 2em
+    &:before
+      content: "## "
+h3
+    font-size: 1.8em
+    &:before
+      content: "### "
+h4
+    font-size: 1.6em
+    &:before
+      content: "#### "
+
+footer
+  margin-top: 20px
+
+blockquote
+  margin: 1.5em 10px
+  padding: 0.5em 10px
+  font-style: italic
+  background: $light-background
+  &:before
+    content: ">"
+    font-size: 1.2*$font-size
+  & p
+    display: inline
+
+blockquote.description
+  margin-top: 2px
+
+code, pre
+    background: $light-background
+    font-family: $code-font
+    font-size: 0.85*$font-size
+
+code.highlighter-rouge
+  padding: 2px 4px
+  &:before, &:after
+    content: "`"
+    font-weight: bolder
+
+pre
+  padding: 8px 15px
+  white-space: pre-wrap
+
+table
+    width: 100%
+    border-collapse: collapse
+    margin: 1rem 0
+    overflow-x: auto
+    th
+        font-size: 0.9rem
+    td, th
+        padding: 2px 5px
+        text-align: center
+        border: 1px solid $border
+
+hr
+  position: relative
+  height: 20px
+  overflow: hidden
+  border: 0
+  margin: 20px 0
+  &:after
+    font-weight: bolder
+    content: "===================================================================================================="
+    position: absolute
+    top: 0
+    left: 0
+    line-height: 20px
+    width: 100%
+    word-wrap: break-word
+
+p.abstract, p.description, small
+  font-size: 0.8*$font-size
+  color: $secondary
+
+p.abstract
+  &:before
+    content: "Abstract. "
+    font-weight: bold
+
+.theme-switch
+  position: absolute
+  top: 10px
+  right: 15px
+
+strong, b, em, i, hr, ul li, ol li, h1, h2, h3, h4, blockquote, code.highlighter-rouge
+  &:after, &:before
+    color: $shadow
+
+div.highlighter-rouge
+  pre
+    &:after, &:before
+      color: $shadow
+      font-weight: bold
+
+$langs: python, conf, rust, ruby, go, c, cpp, sh, lisp, css, html, shell
+@each $lang in $langs
+  div.language-#{$lang}
+    pre
+      &:before
+        content: "``` #{$lang} \a"
+      &:after
+        content: "```"
