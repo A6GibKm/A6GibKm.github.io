@@ -3,7 +3,7 @@ description: Personal blog
 github_username: A6GibKm
 email: contact@deathwish.info
 
-theme: deathwish-md-theme
+remote_theme: https://github.com/A6GibKm/deathwish-md-theme
 
 exclude:
   - vendor
