@@ -3,15 +3,7 @@ description: Personal blog
 github_username: A6GibKm
 email: contact@deathwish.info
 
-markdown: kramdown
-kramdown:
-  math_engine: null
-
-sass:
-  style: compressed
-
-excerpt_separator: <!-- more -->
-permalink: pretty
+theme: deathwish-md-theme
 
 exclude:
   - vendor

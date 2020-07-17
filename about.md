@@ -12,4 +12,3 @@ layout: default
 
 [GitHub](https://github.com/{{ site.github_username }})
 [Email](mailto:{{ site.email }})
-
