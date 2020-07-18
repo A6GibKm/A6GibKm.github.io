@@ -4,6 +4,8 @@ github_username: A6GibKm
 email: contact@deathwish.info
 
 remote_theme: https://github.com/A6GibKm/deathwish-md-theme
+# theme: deathwish-md-theme
+permalink: pretty
 
 exclude:
   - vendor
