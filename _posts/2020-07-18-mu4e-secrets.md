@@ -4,7 +4,7 @@ title: Using libsecret to handle mu4e secrets
 tags: [linux, emacs]
 ---
 
-Usually people set their emacs credentials on a *possible encrypted*`.authfile`. If
+Usually people set their emacs credentials on a *possible encrypted* `.authfile`. If
 your system uses the secret service for managing secrets, using it is a better
 alternative.
 
