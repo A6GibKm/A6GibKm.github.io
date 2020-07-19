@@ -34,3 +34,4 @@ cv/*.log
 **.nav
 **.snm
 **.fdb_latexmk
+Gemfile
