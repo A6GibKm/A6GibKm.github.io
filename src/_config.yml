@@ -3,9 +3,8 @@ description: Personal blog
 github_username: A6GibKm
 email: contact@deathwish.info
 
-remote_theme: A6GibKm/deathwish-md-theme
 permalink: pretty
-# theme: deathwish-md-theme
+theme: deathwish-md-theme
 show_excerpts: true
 
 markdown: kramdown
@@ -26,3 +25,4 @@ exclude:
   - node_modules
   - gulpfile.js
   - package.json
+  - deathwish-md-theme.gemspec
