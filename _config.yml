@@ -5,6 +5,11 @@ email: contact@deathwish.info
 
 remote_theme: A6GibKm/deathwish-md-theme
 permalink: pretty
+# theme: deathwish-md-theme
+show_excerpts: true
+# paginate: 5
+
+markdown: kramdown
 
 exclude:
   - vendor
