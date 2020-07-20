@@ -9,6 +9,8 @@ permalink: pretty
 show_excerpts: true
 
 markdown: kramdown
+kramdown:
+  math_engine: null
 
 author:
   name: deathwish
