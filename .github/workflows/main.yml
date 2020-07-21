@@ -1,4 +1,4 @@
-name: Testing the GitHub Pages publication
+name: Deplying site
 
 on:
   push
@@ -7,7 +7,9 @@ jobs:
   jekyll:
     runs-on: ubuntu-16.04
     steps:
+
     - uses: actions/checkout@v2
+
     - uses: actions/cache@v1
       with:
         path: vendor/bundle
@@ -20,6 +22,7 @@ jobs:
       uses: srt32/git-actions@v0.0.3
       with:
         args: git clone https://github.com/A6GibKm/deathwish-md-theme.git src/deathwish-md-theme
+
     - uses: helaili/jekyll-action@2.0.3
       with:
         jekyll_src: src
