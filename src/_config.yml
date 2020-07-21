@@ -20,6 +20,7 @@ pluggins:
 exclude:
   - vendor
   - LICENSE
+  - CNAME
   - README.md
   - Gemfile
   - Gemfile.lock
