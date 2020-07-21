@@ -50,4 +50,4 @@ python2 version bundled with `offlineimap` won't be able to load external packag
 
 [emacs-docs]:https://www.gnu.org/software/emacs/manual/html_mono/auth.html#Secret-Service-API
 [keyring]:https://keyring.readthedocs.io/en/latest/
-[offlineimap]:http://www.offlineimap.org/
+[offlineimap]:https://www.offlineimap.org/
