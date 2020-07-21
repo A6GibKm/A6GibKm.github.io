@@ -28,3 +28,5 @@ exclude:
   - gulpfile.js
   - package.json
   - deathwish-md-theme.gemspec
+  - deathwish-md-theme
+  - .nojekyll
