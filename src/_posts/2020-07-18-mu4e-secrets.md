@@ -9,12 +9,14 @@ your system uses the secret service for managing secrets, using it is a better
 alternative.
 
 To create the smtp secret run inside of emacs
+
 ```lisp
 (secrets-create-item "default" "smtp" "PASSWORD"
            :user "USER@EMAIL.com"
            :host "UPSTREAM_IP"
            :port "UPSTREAM_PORT")
 ```
+
 <!-- more -->
 
 where `host` and `port` have to be set to your upstream provider, mine are set
