@@ -8,6 +8,8 @@ description: >
 permalink: pretty
 theme: deathwish-md-theme
 show_excerpts: true
+sass:
+  style: compressed
 
 markdown: kramdown
 
@@ -20,8 +22,8 @@ pluggins:
 exclude:
   - vendor
   - LICENSE
-  - CNAME
   - README.md
+  # - CNAME Do not exclude
   - Gemfile
   - Gemfile.lock
   - node_modules
