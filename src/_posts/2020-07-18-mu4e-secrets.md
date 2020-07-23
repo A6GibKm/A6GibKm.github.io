@@ -25,7 +25,8 @@ for `protonmail-bridge`.
 To use the recently created secret, add to your email configuration
 
 ```lisp
-(require 'secrets)
+(autoload 'secrets-get-attribute "secrets")
+
 (setq smtpmail-smtp-server (secrets-get-attribute "default" "smtp" :host)
         smtpmail-smtp-user (secrets-get-attribute "default" "smtp" :user)
         smtpmail-smtp-service (secrets-get-attribute "default" "smtp" :port))
