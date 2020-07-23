@@ -4,11 +4,11 @@ title: Using libsecret to handle mu4e secrets
 tags: [linux, emacs]
 ---
 
-Usually people set their emacs credentials on a *possible encrypted* `.authfile`. If
+Usually people set their Emacs credentials on a *possible encrypted* `.authfile`. If
 your system uses the secret service for managing secrets, using it is a better
 alternative.
 
-To create the smtp secret run inside of emacs
+To create the SMTP secret run inside Emacs:
 
 ```lisp
 (secrets-create-item "default" "smtp" "PASSWORD"
@@ -32,7 +32,7 @@ To use the recently created secret, add to your email configuration
         smtpmail-smtp-service (secrets-get-attribute "default" "smtp" :port))
 ```
 
-Additionally for `mbsync` you can just add 
+Additionally, for `mbsync` you can just add 
 
 ```sh
 PassCmd "secret-tool lookup user USER@EMAIL.com"
@@ -42,7 +42,7 @@ to `~/.mbsyncrc` to retrieve the secret, which is cleaner than the
 `.authfile.gpg` solution.
 
 [Offlineimap][offlineimap] users can use the [keyring][keyring] package to
-store their secrets, but since python2 is deprecated, in some linux distributions the
+store their secrets, but since python2 is deprecated, in some Linux distributions the
 python2 version bundled with `offlineimap` won't be able to load external packages. 
 
 ## References
