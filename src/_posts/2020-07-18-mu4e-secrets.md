@@ -19,8 +19,7 @@ To create the SMTP secret run inside Emacs:
 
 <!-- more -->
 
-where `host` and `port` have to be set to your upstream provider, mine are set
-for `protonmail-bridge`.
+where `host` and `port` correspond to your email provider.
 
 To use the recently created secret, add to your email configuration
 
@@ -43,7 +42,7 @@ to `~/.mbsyncrc` to retrieve the secret, which is cleaner than the
 
 [Offlineimap][offlineimap] users can use the [keyring][keyring] package to
 store their secrets, but since python2 is deprecated, in some Linux distributions the
-python2 version bundled with `offlineimap` won't be able to load external packages. 
+`python2` version bundled with `offlineimap` won't be able to load external packages. 
 
 ## References
 
