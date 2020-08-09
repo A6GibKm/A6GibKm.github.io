@@ -69,7 +69,6 @@ and symbols like `^`, to fix this add
 ```lisp
 (when (eq window-system 'pgtk)
   (pgtk-use-im-context t))
-
 ```
 
 to your `init.el`. Now Emacs will just build whatever `elc` file it loads
