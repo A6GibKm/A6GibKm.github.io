@@ -58,7 +58,7 @@ To compile `elc` files as needed, in a deferred/async manner, add to your `init.
 ```lisp
 (when (fboundp 'native-compile-async)
   (setq comp-deferred-compilation t
-        comp-deferred-compilation-black-list '("mu4e")))
+        comp-deferred-compilation-black-list '("/mu4e.*\\.el$")))
 ```
 The default configuration uses at most half of the cores for asynchronous
 compilation, this can be configured with the `comp-async-jobs-number` variable.
@@ -76,6 +76,9 @@ asynchronously, this might take a while one the first run but at least it is
 done asynchronously and won't interrupt your session. You can find some
 benchmarks at [gccemacs](https://akrl.sdf.org/gccemacs.html).
 
+**Note**: Doom emacs user do not need to defer compilation, `doom sync` and
+`doom build` take care of building `eln` files.
+
 ## Dealing with system-wide packages
 
 Some packages like for example `mu4e` are located in `/usr` and need root
@@ -88,6 +91,18 @@ sudo emacs -Q -batch -L . -f batch-native-compile *.el
 
 on their respective folders to get natively compiled binaries.
 
+## In repositories
+
+There are many builds and guides for testing, either nativecomp or pgtk, readily available for some GNU+Linux distributions
+
+* copr: [wef/emacs-pgtk]
+* nix: [gist](https://gist.github.com/mjlbach/179cf58e1b6f5afcb9a99d4aaf54f549)
+* Arch: [emacs-native-comp-git](https://aur.archlinux.org/packages/emacs-native-comp-git/)
+* Flatpak: [fejfighter/pgtk-emacs-flatpak](https://github.com/fejfighter/pgtk-emacs-flatpak)
+* guix: [flatwhatson/guix-channel](https://github.com/flatwhatson/guix-channel)
+
 ## References
 
 - [Emacs native-comp on CentOS 7](https://ddavis.io/posts/emacs-native-centos7/)
+
+[wef/emacs-pgtk]: https://copr.fedorainfracloud.org/coprs/wef/emacs-pgtk/
