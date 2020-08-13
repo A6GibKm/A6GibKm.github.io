@@ -76,7 +76,7 @@ asynchronously, this might take a while one the first run but at least it is
 done asynchronously and won't interrupt your session. You can find some
 benchmarks at [gccemacs](https://akrl.sdf.org/gccemacs.html).
 
-**Note**: Doom emacs user do not need to defer compilation, `doom sync` and
+**Note**: Doom emacs users do not need to defer compilation, `doom sync` and
 `doom build` take care of building `eln` files.
 
 ## Dealing with system-wide packages
