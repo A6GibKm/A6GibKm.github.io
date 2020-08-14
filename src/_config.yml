@@ -20,7 +20,6 @@ author:
 url: "https://deathwish.info"
 
 pluggins:
-  - jekyll-time-to-read
   - jekyll-sitemap # require after
 
 exclude:
