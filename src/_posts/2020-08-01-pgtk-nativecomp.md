@@ -93,9 +93,12 @@ on their respective folders to get natively compiled binaries.
 
 ## In repositories
 
-There are many builds and guides for testing, either nativecomp or pgtk, readily available for some GNU+Linux distributions
+There are many builds and guides for testing, either nativecomp or pgtk, readily
+available for some GNU+Linux distributions. I am maintaining a COPR build with
+pure gtk and native compilation enabled for
+fedora 32 and 33 at [copr].
 
-* copr: [wef/emacs-pgtk]
+* Fedora: [copr]
 * nix: [gist](https://gist.github.com/mjlbach/179cf58e1b6f5afcb9a99d4aaf54f549)
 * Arch: [emacs-native-comp-git](https://aur.archlinux.org/packages/emacs-native-comp-git/)
 * Flatpak: [fejfighter/pgtk-emacs-flatpak](https://github.com/fejfighter/pgtk-emacs-flatpak)
@@ -105,4 +108,4 @@ There are many builds and guides for testing, either nativecomp or pgtk, readily
 
 - [Emacs native-comp on CentOS 7](https://ddavis.io/posts/emacs-native-centos7/)
 
-[wef/emacs-pgtk]: https://copr.fedorainfracloud.org/coprs/wef/emacs-pgtk/
+[copr]: https://copr.fedorainfracloud.org/coprs/deathwish/emacs-pgtk-nativecomp/
