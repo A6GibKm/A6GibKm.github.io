@@ -1,8 +1,10 @@
-title: Deathwish
 github_username: A6GibKm
 email: contact@deathwish.info
-description: >
-  Ideas in maths, technology and programming.
+title: Deathwish
+description: Ideas in maths, technology, and programming
+# description: >
+#   Ph.D. student in Mathematics. Repository of some ideas
+#   in mathematics, technology and programming.
 
 permalink: pretty
 theme: deathwish-md-theme
