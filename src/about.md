@@ -3,9 +3,8 @@ layout: page
 title: About
 ---
 <br>
-<br>
 <center>
-{% include avatar.svg %}
+<image src="{% link assets/avatar.png %}"/>
 </center>
 
 # Deathwish
