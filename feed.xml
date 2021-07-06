@@ -1,0 +1,1259 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://deathwish.info/feed.xml" rel="self" type="application/atom+xml" /><link href="https://deathwish.info/" rel="alternate" type="text/html" /><updated>2021-07-06T11:28:56+00:00</updated><id>https://deathwish.info/feed.xml</id><title type="html">Deathwish</title><subtitle>Ideas in math, technology, and programming</subtitle><author><name>M.</name><email>contact@deathwish.info</email></author><entry><title type="html">GSoC 2021 and GNOME Design tools</title><link href="https://deathwish.info/2021/07/03/gsoc/" rel="alternate" type="text/html" title="GSoC 2021 and GNOME Design tools" /><published>2021-07-03T00:00:00+00:00</published><updated>2021-07-03T00:00:00+00:00</updated><id>https://deathwish.info/2021/07/03/gsoc</id><content type="html" xml:base="https://deathwish.info/2021/07/03/gsoc/">&lt;p&gt;This Google School of Code, I decided to work with &lt;a href=&quot;https://belmoussaoui.com&quot;&gt;Bilal Elmoussaoui&lt;/a&gt; as a mentor, the goal being updating some GNOME design tools to GTK 4, specifically &lt;a href=&quot;https://flathub.org/apps/details/org.gnome.design.IconLibrary&quot;&gt;Icon Library&lt;/a&gt; and &lt;a href=&quot;https://flathub.org/apps/details/org.gnome.design.AppIconPreview&quot;&gt;App Icon Preview&lt;/a&gt;. Both apps are written in Rust and make use of the &lt;a href=&quot;https://gtk-rs.org/&quot;&gt;gtk-rs&lt;/a&gt; bindings for gtk.&lt;/p&gt;
+
+&lt;h3 id=&quot;icon-library&quot;&gt;Icon Library&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/icon-library.png&quot; alt=&quot;Icon Library&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Icon Library is an app to preview symbolic icons in &lt;a href=&quot;https://gitlab.gnome.org/Teams/Design/icon-development-kit&quot;&gt;icon-development-kit&lt;/a&gt;. It allows to export and search icons. The process of porting Icon Library &lt;a href=&quot;https://gitlab.gnome.org/World/design/icon-library/-/merge_requests/16&quot;&gt;!16&lt;/a&gt; was quite straightforward. The clipboard had to be adapted to the new api and the search provider had to be tweaked.&lt;/p&gt;
+
+&lt;p&gt;The most interesting bit was the search feature. Because of the better support for subclassing in gtk4-rs, it was natural to use list models for displaying lists, which in turn made using a filter on the model an obvious choice. But applying a filter on the list model resulted that each icon had to be redrawn on each search query, which is quite slow. The solution was to go back to setting the filter directly on the list widget.&lt;/p&gt;
+
+&lt;h3 id=&quot;app-icon-preview&quot;&gt;App Icon Preview&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/app-icon-preview.png&quot; alt=&quot;App Icon Preview&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;App Icon Preview is an app for designing icons that target the GNOME environment. One complex part of porting this is app is its dependence on &lt;a href=&quot;https://gitlab.gnome.org/GNOME/librsvg&quot;&gt;librsvg&lt;/a&gt;, which was recently updated for the latest gtk-rs. Another friction point is that widgets have moved away from using Cairo as their render and the Paintable api is not very friendly with the Clipboard or saving widgets as images. Clipboards consume&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gdk::Texture&lt;/code&gt; which contain metainfo, and Paintables have no methods to construct such.&lt;/p&gt;
+
+&lt;p&gt;After some investigation, we found a way to free the node from the render and paint it into the Cairo context used to drawn the texture.&lt;/p&gt;
+
+&lt;p&gt;The port &lt;a href=&quot;https://gitlab.gnome.org/World/design/app-icon-preview/-/merge_requests/62&quot;&gt;!62&lt;/a&gt; still has some rough edges, but it is looking promising.&lt;/p&gt;</content><author><name>M.</name><email>contact@deathwish.info</email></author><category term="linux" /><category term="gnome" /><summary type="html">This Google School of Code, I decided to work with Bilal Elmoussaoui as a mentor, the goal being updating some GNOME design tools to GTK 4, specifically Icon Library and App Icon Preview. Both apps are written in Rust and make use of the gtk-rs bindings for gtk.</summary></entry><entry><title type="html">Building GNU Emacs with pure GTK and native compilation</title><link href="https://deathwish.info/2020/08/01/pgtk-nativecomp/" rel="alternate" type="text/html" title="Building GNU Emacs with pure GTK and native compilation" /><published>2020-08-01T00:00:00+00:00</published><updated>2020-08-01T00:00:00+00:00</updated><id>https://deathwish.info/2020/08/01/pgtk-nativecomp</id><content type="html" xml:base="https://deathwish.info/2020/08/01/pgtk-nativecomp/">&lt;p&gt;The idea of a pure GTK implementation of GNU Emacs was introduced, as far as I
+am aware, in &lt;a href=&quot;https://lists.gnu.org/archive/html/emacs-devel/2016-10/msg00956.html&quot;&gt;this
+thread&lt;/a&gt; in
+the Emacs mail list. After a long time I found out a fork at
+&lt;a href=&quot;https://github.com/masm11/emacs&quot;&gt;masm11/emacs&lt;/a&gt;, which brings proper GTK support
+and a separate fork at &lt;a href=&quot;https://github.com/fejfighter/emacs&quot;&gt;fejfighter/emacs&lt;/a&gt;
+which can be rebased upstream, making possible a rebase onto the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;native-comp&lt;/code&gt;
+branch.&lt;/p&gt;
+
+&lt;p&gt;One of the benefits of a pure GTK implementation is support for the
+Wayland protocol and the ability to use fractional scaling in GNOME without
+blurring.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;h2 id=&quot;dependencies&quot;&gt;Dependencies&lt;/h2&gt;
+
+&lt;p&gt;Dependencies can be installed via&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo dnf buildep emacs
+sudo dnf install jansson-devel mpfr-devel libmpc-devel gmp-devel libgccjit-devel
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jansson&lt;/code&gt; is required for the new native JSON parser introduced in Emacs 27, and
+the rest of the developer packages are for native-comp.&lt;/p&gt;
+
+&lt;h2 id=&quot;building&quot;&gt;Building&lt;/h2&gt;
+
+&lt;p&gt;To build just clone the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pgtk-native-comp&lt;/code&gt; branch of &lt;a href=&quot;https://github.com/fejfighter/emacs&quot;&gt;fejfighter/emacs&lt;/a&gt;,
+and build as usual. The following flags are the ones used to build the Fedora
+&lt;a href=&quot;https://src.fedoraproject.org/rpms/emacs&quot;&gt;build&lt;/a&gt; of Emacs, plus the ones for
+native compilation and pure GTK support.&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; pgtk-nativecomp https://github.com/fejfighter/emacs
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;emacs
+./autogen.sh
+./configure &lt;span class=&quot;nt&quot;&gt;--with-dbus&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--with-gif&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--with-jpeg&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--with-png&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--with-rsvg&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+           &lt;span class=&quot;nt&quot;&gt;--with-tiff&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--with-xft&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--with-xpm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--with-gpm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;no &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+           &lt;span class=&quot;nt&quot;&gt;--with-xwidgets&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--with-modules&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--with-native-comp&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--with-pgtk&lt;/span&gt;
+make &lt;span class=&quot;nt&quot;&gt;-j6&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;make &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Note that the flag &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--with-jansson&lt;/code&gt; is not required anymore.&lt;/p&gt;
+
+&lt;h2 id=&quot;configuration&quot;&gt;Configuration&lt;/h2&gt;
+
+&lt;p&gt;To compile &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;elc&lt;/code&gt; files as needed, in a deferred/async manner, add to your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;init.el&lt;/code&gt; the following.&lt;/p&gt;
+
+&lt;div class=&quot;language-lisp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;fboundp&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'native-compile-async&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;comp-deferred-compilation&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;comp-deferred-compilation-black-list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/mu4e.*\\.el$&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The default configuration uses at most half of the cores for asynchronous
+compilation, this can be configured with the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;comp-async-jobs-number&lt;/code&gt; variable.&lt;/p&gt;
+
+&lt;p&gt;If you are not using an English keyboard, you might have issues with ligatures
+and symbols like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;^&lt;/code&gt;, to fix this add&lt;/p&gt;
+
+&lt;div class=&quot;language-lisp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;window-system&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'pgtk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pgtk-use-im-context&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;to your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;init.el&lt;/code&gt;. Now Emacs will just build whatever &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;elc&lt;/code&gt; file it loads
+asynchronously, this might take a while one the first run but at least it is
+done asynchronously and won’t interrupt your session. You can find some
+benchmarks at &lt;a href=&quot;https://akrl.sdf.org/gccemacs.html&quot;&gt;gccemacs&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: Doom emacs users do not need to defer compilation, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;doom sync&lt;/code&gt; and
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;doom build&lt;/code&gt; take care of building &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eln&lt;/code&gt; files.&lt;/p&gt;
+
+&lt;h2 id=&quot;dealing-with-system-wide-packages&quot;&gt;Dealing with system-wide packages&lt;/h2&gt;
+
+&lt;p&gt;Some packages like for example &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mu4e&lt;/code&gt; are located in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/usr&lt;/code&gt; and need root
+permissions to be compiled, for them you can
+run&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo emacs -Q -batch -L . -f batch-native-compile *.el
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;on their respective folders to get natively compiled binaries.&lt;/p&gt;
+
+&lt;h2 id=&quot;in-repositories&quot;&gt;In repositories&lt;/h2&gt;
+
+&lt;p&gt;There are many builds and guides for testing, either nativecomp or pgtk, readily
+available for some GNU+Linux distributions. I am maintaining a COPR build with
+pure gtk and native compilation enabled for
+fedora 32 and 33 at &lt;a href=&quot;https://copr.fedorainfracloud.org/coprs/deathwish/emacs-pgtk-nativecomp/&quot;&gt;copr&lt;/a&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Fedora: &lt;a href=&quot;https://copr.fedorainfracloud.org/coprs/deathwish/emacs-pgtk-nativecomp/&quot;&gt;copr&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;nix: &lt;a href=&quot;https://gist.github.com/mjlbach/179cf58e1b6f5afcb9a99d4aaf54f549&quot;&gt;gist&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Arch: &lt;a href=&quot;https://aur.archlinux.org/packages/emacs-native-comp-git/&quot;&gt;emacs-native-comp-git&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Flatpak: &lt;a href=&quot;https://github.com/fejfighter/pgtk-emacs-flatpak&quot;&gt;fejfighter/pgtk-emacs-flatpak&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;guix: &lt;a href=&quot;https://github.com/flatwhatson/guix-channel&quot;&gt;flatwhatson/guix-channel&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://ddavis.io/posts/emacs-native-centos7/&quot;&gt;Emacs native-comp on CentOS 7&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>M.</name><email>contact@deathwish.info</email></author><category term="emacs" /><summary type="html">The idea of a pure GTK implementation of GNU Emacs was introduced, as far as I am aware, in this thread in the Emacs mail list. After a long time I found out a fork at masm11/emacs, which brings proper GTK support and a separate fork at fejfighter/emacs which can be rebased upstream, making possible a rebase onto the native-comp branch.</summary></entry><entry><title type="html">Reading environmental data using embedded rust on STM32</title><link href="https://deathwish.info/2020/07/19/rust-stm32/" rel="alternate" type="text/html" title="Reading environmental data using embedded rust on STM32" /><published>2020-07-19T00:00:00+00:00</published><updated>2020-07-19T00:00:00+00:00</updated><id>https://deathwish.info/2020/07/19/rust-stm32</id><content type="html" xml:base="https://deathwish.info/2020/07/19/rust-stm32/">&lt;p&gt;There are valid concerns with embedded devices, specifically IoT devices,
+ranging from the use of secure communication protocols, to memory safety issues.
+This makes rust a natural choice of language to program embedded devices.&lt;/p&gt;
+
+&lt;p&gt;Enter stm32, also known as &lt;em&gt;Blue Pill&lt;/em&gt;. This is a very available and cheap (~2usd)
+developer board, powered with a 72Mhz ARM 32-bit CPU, the “same” architecture that
+powers most mobile devices. Rust currently provides Tier 2 support for ARM,
+making this a perfect choice of board.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: There is also a newer model, called &lt;em&gt;Black Pill&lt;/em&gt;, which
+costs more or less the same and comes with better specifications and maintains
+most of the layout.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/stm32.jpg&quot; alt=&quot;STM32&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;setup&quot;&gt;Setup&lt;/h2&gt;
+
+&lt;p&gt;There are many embedded environmental sensors, in particular the sensors BME280,
+BMP280, and BME680 by Bosch have rust crates. I will use a BME280 sensor in
+this example with the following wiring.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;STM32&lt;/th&gt;
+      &lt;th&gt;BME280&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3.3&lt;/td&gt;
+      &lt;td&gt;VCC&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;G&lt;/td&gt;
+      &lt;td&gt;GND&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;B6&lt;/td&gt;
+      &lt;td&gt;SCL&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;B7&lt;/td&gt;
+      &lt;td&gt;SDA&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;In this example, I use a st-link v2 programmer for flashing and
+debugging, configured as follows.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;STM32&lt;/th&gt;
+      &lt;th&gt;ST-Link V2&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;+3.3V&lt;/td&gt;
+      &lt;td&gt;3.3V&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;DIO&lt;/td&gt;
+      &lt;td&gt;SWDIO&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;DCLK&lt;/td&gt;
+      &lt;td&gt;SWCLK&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;GND&lt;/td&gt;
+      &lt;td&gt;GND&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;strong&gt;Important&lt;/strong&gt;: Disconnect the blue-pill from any external source of power before
+connecting the debugger to your machine.&lt;/p&gt;
+
+&lt;h2 id=&quot;rust-and-cargo-setup&quot;&gt;Rust and Cargo setup&lt;/h2&gt;
+
+&lt;p&gt;Unless you are using an ARM machine, cross-compilation utilities have to be
+installed via&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo dnf install arm-none-eabi-binutils-cs
+sudo apt-get install binutils-arm-linux-gnueabi
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;depending on the host distribution, and add the target architecture of the stm32
+to the rust toolchain.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rustup target add thumbv7m-none-eabi 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We start the project &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cargo init stm32_bme280&lt;/code&gt; and add the following
+dependencies to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Cargo.toml&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-toml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nn&quot;&gt;[dependencies]&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;bme280&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;0.2&quot;&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;cortex-m-rt&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;0.6&quot;&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;cortex-m&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;0.6&quot;&lt;/span&gt;
+&lt;span class=&quot;nn&quot;&gt;stm32f1xx-hal&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;version&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;0.6&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;py&quot;&gt;features&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stm32f103&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;rt&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]}&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;panic-halt&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;0.2&quot;&lt;/span&gt;
+&lt;span class=&quot;nn&quot;&gt;rtt-target&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;py&quot;&gt;version&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;0.2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;py&quot;&gt;features&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;[&quot;cortex-m&quot;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In order for the program to fit into memory we implement the following
+compile-time optimizations&lt;/p&gt;
+
+&lt;div class=&quot;language-toml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Cargo.toml&lt;/span&gt;
+&lt;span class=&quot;nn&quot;&gt;[profile.release]&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;opt-level&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'s'&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# optimize for size ('z' would optimize even more)&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;lto&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# link with link time optimization (lto).&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cortex-m-rt&lt;/code&gt; crate requires a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;memory.x&lt;/code&gt; file at the project root specifying the memory layout
+of the board, luckily, the &lt;a href=&quot;https://docs.rs/cortex-m-rt/0.6.12/cortex_m_rt/index.html&quot;&gt;documentation&lt;/a&gt; contains an example
+for this specific board.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/* Linker script for the STM32F103C8T6 */
+MEMORY
+{
+  FLASH : ORIGIN = 0x08000000, LENGTH = 64K
+  RAM : ORIGIN = 0x20000000, LENGTH = 20K
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To make life more convenient we add the following to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.cargo/config&lt;/code&gt;, to be able
+to run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cargo build&lt;/code&gt; without additional flags,&lt;/p&gt;
+
+&lt;div class=&quot;language-toml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nn&quot;&gt;[build]&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;target&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;thumbv7m-none-eabi&quot;&lt;/span&gt;
+
+&lt;span class=&quot;py&quot;&gt;rustflags&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&quot;-C&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;link-arg=-Tlink.x&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;computing-the-altitude&quot;&gt;Computing the altitude&lt;/h2&gt;
+
+&lt;p&gt;It is a known-fact that the altitude can be computed as a function of the
+pressure, a model for this is&lt;/p&gt;
+
+\[h = h_0 \left( 1 - \left( \frac{p}{p_0}\right)^\alpha \right),\]
+
+&lt;p&gt;were \(p_0\) is the pressure at sea-level, \(p\) the pressure, \(h \sim 44330\,m\), and
+\(\alpha \sim \frac{1}{5.255}\). But there is a single problem, the
+implementation of the power function &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fmt::powf()&lt;/code&gt; requires intrinsic CPU instructions which are not
+available or implemented for this board. We can do the following approximation.&lt;/p&gt;
+
+&lt;p&gt;Let \(\varepsilon = 1- \frac{p}{p_0}\). Then,
+since the preassure at sea level is very similar to what can be measured at
+home, \(\lvert \varepsilon \rvert \ll 1\), and we can do the second order
+approximation&lt;/p&gt;
+
+\[h \sim h_0 \left( \alpha \varepsilon - \frac{1}{2} \alpha (\alpha - 1)
+  \varepsilon^2 \right).\]
+
+&lt;h2 id=&quot;code&quot;&gt;Code&lt;/h2&gt;
+
+&lt;p&gt;The program used is the following.&lt;/p&gt;
+
+&lt;div class=&quot;language-rust highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;#![deny(unsafe_code)]&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;#![no_std]&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;#![no_main]&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;extern&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;crate&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;panic_halt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;use&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;stm32f1xx_hal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::{&lt;/span&gt;
+    &lt;span class=&quot;nn&quot;&gt;prelude&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;pac&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nn&quot;&gt;delay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Delay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;i2c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;use&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;cortex_m_rt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;entry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;use&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;bme280&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BME280&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;use&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;rtt_target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rtt_init_print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rprintln&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;nd&quot;&gt;#[entry]&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;cortex_m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nn&quot;&gt;Peripherals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;take&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.unwrap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pac&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nn&quot;&gt;Peripherals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;take&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.unwrap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rcc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.RCC&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.constrain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;// Set up the I2C bus&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flash&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.FLASH&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.constrain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;afio&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.AFIO&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.constrain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rcc&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.apb2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gpiob&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.GPIOB&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rcc&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.apb2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scl&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gpiob&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.pb6&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.into_alternate_open_drain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gpiob&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.crl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sda&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gpiob&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.pb7&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.into_alternate_open_drain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gpiob&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.crl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mapr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;afio&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.mapr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;i2c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nn&quot;&gt;Mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Standard&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;frequency&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;40&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.hz&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clocks&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rcc&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.cfgr&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.freeze&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flash&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.acr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;apb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rcc&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.apb1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start_timeout_us&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;u32&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start_retries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;u8&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;addr_timeout_us&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;u32&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data_timeout_us&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;u32&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;// Creates a blocking I2C1 object on pins PB6 and PB7&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i2c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;i2c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nn&quot;&gt;BlockingI2c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;i2c1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.I2C1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sda&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mapr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;clocks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;apb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;start_timeout_us&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;start_retries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;addr_timeout_us&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;data_timeout_us&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;// Set up the BME280&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;delay&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;Delay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cp&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.SYST&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clocks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bme280&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;BME280&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new_primary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i2c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;delay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;bme280&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;BME280 initialization failed.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;rtt_init_print!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;rprintln!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;BME280 ready.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;delay_time&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1_000_000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// millis&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sea_level&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;f32&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1013.25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// hPa&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;f32&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;44330.0&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// m;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alpha&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;f32&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.225&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;loop&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nn&quot;&gt;cortex_m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nn&quot;&gt;asm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;delay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;delay_time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;measurements&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bme280&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.measure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.unwrap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pressure&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;measurements&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.pressure&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;100.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// measured in hPa&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;// Second order Taylor serie for (1- epsilon)^alpha&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;epsilon&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pressure&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sea_level&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;altitude&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alpha&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;epsilon&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alpha&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;alpha&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;epsilon&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;epsilon&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;nd&quot;&gt;rprintln!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Temperature: {}°C&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;measurements&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.temperature&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;nd&quot;&gt;rprintln!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Altitude: {}m&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;altitude&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;nd&quot;&gt;rprintln!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Humidty: {}%&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;measurements&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;.humidity&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;nd&quot;&gt;rprintln!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Pressure: {}hPa&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pressure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Some important things to note.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;We have to implement &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#[panic_handler]&lt;/code&gt;, the
+crate &lt;a href=&quot;https://crates.io/crates/panic-halt&quot;&gt;panic-halt&lt;/a&gt;, provides a lightweight implementation.&lt;/li&gt;
+  &lt;li&gt;The &lt;a href=&quot;https://crates.io/crates/bme280&quot;&gt;bme280&lt;/a&gt; crate does not implement the required traits to use
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;i2c::i2c1&lt;/code&gt;, so we use its blocking cousin &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;i2c::BlockingI2c::i2c1&lt;/code&gt;, see &lt;a href=&quot;https://users.rust-lang.org/t/i2c-and-bme280-missing-trait/29366&quot;&gt;[2]&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cargo-embed&lt;/code&gt; uses the Real-Time transfer protocol, provided by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rtt-target&lt;/code&gt;, instead of the more common
+semi-hosting method.&lt;/li&gt;
+  &lt;li&gt;The standard library is a no-go for most embedded applications, hence the use
+of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#![no_std]&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;flashing-and-testing&quot;&gt;Flashing and testing&lt;/h2&gt;
+
+&lt;p&gt;To run this program we are going to use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cargo-embed&lt;/code&gt; from [probe-rs][probe.rs], which is a drop-in
+replacement for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cargo run&lt;/code&gt; for embedded devices, but it can do much more, such
+as logging RTT output and opening a GDB server. It can be installed with,&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cargo install cargo-embed
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;It is advisable to set add configuration file &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Embed.toml&lt;/code&gt;, with the following
+contents, at the root of the project.&lt;/p&gt;
+
+&lt;div class=&quot;language-toml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nn&quot;&gt;[default.general]&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;chip&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;STM32F103C8&quot;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Use --list-chips to see more.&lt;/span&gt;
+
+&lt;span class=&quot;nn&quot;&gt;[default.rtt]&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;enabled&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The default values can be seen at the &lt;a href=&quot;https://github.com/probe-rs/cargo-embed/blob/master/src/config/default.toml&quot;&gt;default Embed.toml&lt;/a&gt;. Finally,
+to run the program we simply run&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cargo embed --release
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;and we can see the output of our program,&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;9:01:27.862  BME280 ready.
+9:02:36.586  Temperature: 16.995693°C
+19:02:36.586 Altitude: 596.0528m 
+19:02:36.586 Humidty: 69.90904%
+19:02:36.586 Pressure: 943.97943hPa
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In my measurements, the approximation works just fine. I compared the
+output with those from another BME280 sensor running on an Arduino board using
+&lt;a href=&quot;https://github.com/adafruit/Adafruit_BME280_Library&quot;&gt;Adafruit’s BME280 library&lt;/a&gt;
+and saw a difference in the measurement of altitude of about 0.15%.&lt;/p&gt;
+
+&lt;h3 id=&quot;closing-thoughts&quot;&gt;Closing thoughts&lt;/h3&gt;
+
+&lt;p&gt;Rust provides a rapidly moving environment for embedded devices, with a friendly
+community, and tools like
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cargo-embed&lt;/code&gt; which make it a more streamlined process,
+similar to the usual x86_64 experience. There are still a few rough edges, like the
+board auto-detection not working in some cases but overall rust is becoming a
+good language for IoT and embedded.&lt;/p&gt;
+
+&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li class=&quot;bibliography&quot;&gt;&lt;a href=&quot;https://jonathanklimt.de/electrics/programming/rust-STM32F103-blink/&quot;&gt;Rust on STM32: Blinking an LED&lt;/a&gt;&lt;/li&gt;
+  &lt;li class=&quot;bibliography&quot;&gt;&lt;a href=&quot;https://users.rust-lang.org/t/i2c-and-bme280-missing-trait/29366&quot;&gt;I2C and BME280, missing trait&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</content><author><name>M.</name><email>contact@deathwish.info</email></author><category term="rust" /><category term="embedded" /><summary type="html">There are valid concerns with embedded devices, specifically IoT devices, ranging from the use of secure communication protocols, to memory safety issues. This makes rust a natural choice of language to program embedded devices.</summary></entry><entry><title type="html">Controlling your Pi-hole with async python GPIO</title><link href="https://deathwish.info/2020/07/18/pyhole/" rel="alternate" type="text/html" title="Controlling your Pi-hole with async python GPIO" /><published>2020-07-18T00:00:00+00:00</published><updated>2020-07-18T00:00:00+00:00</updated><id>https://deathwish.info/2020/07/18/pyhole</id><content type="html" xml:base="https://deathwish.info/2020/07/18/pyhole/">&lt;p&gt;This project involves adding two buttons to your Raspberry Pi, one to disable
+Pi-hole for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;n&lt;/code&gt; seconds and the other to enable it back. I run many services on
+one Raspberry Pi and a dummy synchronous &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;while True&lt;/code&gt; loop will lock one core,
+that isn’t going to fly.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/pyhole-real.jpg&quot; alt=&quot;Raspberry GPIO&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;setting&quot;&gt;Setting&lt;/h2&gt;
+
+&lt;p&gt;For this project we need three LEDs, two buttons, and one
+330 Ω resistance. We set the green, red and blue LEDs to pins 7, 15, and 12
+respectively. In this project Raspbian and a RPi 3B+ were used.&lt;/p&gt;
+
+&lt;p class=&quot;center&quot;&gt;&lt;img src=&quot;/assets/pyhole-ui.png&quot; alt=&quot;Raspberry GPIO&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Check the pinout diagram of the Raspberry Pi at &lt;a href=&quot;https://pinout.xyz/&quot;&gt;pinout&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Let us start by listing the dependencies&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;#!/usr/bin/env python3
+&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;RPi.GPIO&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# Import Raspberry Pi GPIO library
+&lt;/span&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pihole&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ph&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;sys&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;asyncio&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;controlling-the-pi-hole&quot;&gt;Controlling the pi-hole&lt;/h2&gt;
+
+&lt;p&gt;We control the Pi-hole with &lt;a href=&quot;https://pypi.org/project/PiHole-api/&quot;&gt;PiHole-Api&lt;/a&gt;, for this we need the Pi-hole
+IP address and the WebUI password.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;pihole_addr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;192.168.0.21&quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;time_limit&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# Disable for at most 30 seconds
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pihole_password&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;PIHOLE_PASSWORD&quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# Set the password for first use
+&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# Get password
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pihole_password&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Pihole
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pihole&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ph&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PiHole&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pihole_addr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;pihole&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;authenticate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;version&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pihole&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getVersion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'core_current'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pihole&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Runing pihole&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Status:&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pihole&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;using-python-keyring-to-store-passwords&quot;&gt;Using python-keyring to store passwords&lt;/h2&gt;
+
+&lt;p&gt;Alternatively, using the &lt;a href=&quot;https://pypi.org/project/keyring/&quot;&gt;keyring&lt;/a&gt; package we can securely store the
+password.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;keyring&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;keyrings.alt.file&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PlaintextKeyring&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;keyring&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_keyring&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PlaintextKeyring&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;keyring&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_password&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pihole&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pihole_addr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;keyring&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_password&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pihole&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pihole_addr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pihole_password&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pihole_password&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;On the first run set &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pihole_password&lt;/code&gt; to its real value and then set it to
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;None&lt;/code&gt;. The line &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;keyring.set_keyring(PlaintextKeyring())&lt;/code&gt; should be only be
+used if you do not want to be prompted for the keyring password every time, this
+requires to add&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;backend]
+default-keyring&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;keyrings.alt.file.PlaintextKeyring
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.local/share/python_keyring/crypted_pass.cfg&lt;/code&gt;. See
+&lt;a href=&quot;https://lnx.azurewebsites.net/please-enter-password-for-encrypted-keyring-when-running-python-script-on-ubuntu/&quot;&gt;[3]&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;setting-the-gpios&quot;&gt;Setting the GPIOs&lt;/h2&gt;
+
+&lt;p&gt;This project uses a blue LED to signal that the Pi-hole is disabled. First we
+create a timer class to re-enable the Pi-hole.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;## GPIO setup
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;red&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# Red using pin 7
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;green&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# Green using pin 15
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;blue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# Blue using pin 12
+&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;## Async
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loop&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;timer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Timer
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bouncetime&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# in ms
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Timer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__init__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_timeout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timeout&lt;/span&gt;
+        &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_callback&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;callback&lt;/span&gt;
+        &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_task&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;asyncio&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ensure_future&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_job&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;_job&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;asyncio&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sleep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_timeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;cancel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cancel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+
+&lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;timeout_callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;pihole&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;enable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;LOW&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We also add callbacks for the buttons&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;button_pushed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;loop&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Loop ended&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# should not come to this
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;green&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;loop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;call_soon_threadsafe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;green_action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;red&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;loop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;call_soon_threadsafe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;red_action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;red_action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Red button pushed!&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HIGH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;pihole&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;disable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time_limit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;timer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Timer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time_limit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timeout_callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;green_action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Green button pushed!&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timer&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;timer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cancel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;LOW&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;pihole&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;enable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;It is important to leave everything in a clean state when closing the program,
+this is done using the following function.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;exit_handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'py-hole-ui closed'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cleanup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;pihole&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;enable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;loop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now we can define the main loop&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setwarnings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# Set warnings
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setmode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BOARD&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# Use physical pin numbering
+&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# Set pins to input/output
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;red&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pull_up_down&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PUD_DOWN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;green&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pull_up_down&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PUD_DOWN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OUT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_event_detect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;green&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RISING&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;button_pushed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bouncetime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bouncetime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_event_detect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;red&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GPIO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RISING&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;button_pushed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bouncetime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bouncetime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;loop&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;asyncio&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_event_loop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;loop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run_forever&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;finally&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;exit_handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now python3 does not even appear in the process list, compared to the 100% CPU usage one could
+get using a more naive approach.&lt;/p&gt;
+
+&lt;p&gt;Code at &lt;a href=&quot;https://gist.github.com/A6GibKm/9bb1ead82b20b99e3579bc2eeb71d87e&quot;&gt;github&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li class=&quot;publications&quot;&gt;
+    &lt;p&gt;&lt;a href=&quot;https://raspberrypi.stackexchange.com/questions/54514/implement-a-gpio-function-with-a-callback-calling-a-asyncio-method&quot;&gt;Implement A gpio function with a callback calling a asyncio method&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li class=&quot;publications&quot;&gt;
+    &lt;p&gt;&lt;a href=&quot;https://stackoverflow.com/questions/45419723/python-timer-with-asyncio-coroutine&quot;&gt;Python - timer with asyncio coroutine&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li class=&quot;publications&quot;&gt;
+    &lt;p&gt;&lt;a href=&quot;https://lnx.azurewebsites.net/please-enter-password-for-encrypted-keyring-when-running-python-script-on-ubuntu/&quot;&gt;“Please enter password for encrypted keyring” when running Python script on Ubuntu&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name>M.</name><email>contact@deathwish.info</email></author><category term="linux" /><summary type="html">This project involves adding two buttons to your Raspberry Pi, one to disable Pi-hole for n seconds and the other to enable it back. I run many services on one Raspberry Pi and a dummy synchronous while True loop will lock one core, that isn’t going to fly.</summary></entry><entry><title type="html">Using libsecret to handle mu4e secrets</title><link href="https://deathwish.info/2020/07/18/mu4e-secrets/" rel="alternate" type="text/html" title="Using libsecret to handle mu4e secrets" /><published>2020-07-18T00:00:00+00:00</published><updated>2020-07-18T00:00:00+00:00</updated><id>https://deathwish.info/2020/07/18/mu4e-secrets</id><content type="html" xml:base="https://deathwish.info/2020/07/18/mu4e-secrets/">&lt;p&gt;Usually people set their Emacs credentials on a &lt;em&gt;possible encrypted&lt;/em&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.authfile&lt;/code&gt;. If
+your system uses the secret service for managing secrets, using it is a better
+alternative.&lt;/p&gt;
+
+&lt;p&gt;To create the SMTP secret run inside Emacs:&lt;/p&gt;
+
+&lt;div class=&quot;language-lisp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;secrets-create-item&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;default&quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;smtp&quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;PASSWORD&quot;&lt;/span&gt;
+           &lt;span class=&quot;ss&quot;&gt;:user&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;USER@EMAIL.com&quot;&lt;/span&gt;
+           &lt;span class=&quot;ss&quot;&gt;:host&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;UPSTREAM_IP&quot;&lt;/span&gt;
+           &lt;span class=&quot;ss&quot;&gt;:port&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;UPSTREAM_PORT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;where &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;host&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;port&lt;/code&gt; correspond to your email provider.&lt;/p&gt;
+
+&lt;p&gt;To use the recently created secret, add to your email configuration&lt;/p&gt;
+
+&lt;div class=&quot;language-lisp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;autoload&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'secrets-get-attribute&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;secrets&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;smtpmail-smtp-server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;secrets-get-attribute&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;default&quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;smtp&quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;smtpmail-smtp-user&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;secrets-get-attribute&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;default&quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;smtp&quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;smtpmail-smtp-service&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;secrets-get-attribute&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;default&quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;smtp&quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Additionally, for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mbsync&lt;/code&gt; you can just add&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;PassCmd &lt;span class=&quot;s2&quot;&gt;&quot;secret-tool lookup user USER@EMAIL.com&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.mbsyncrc&lt;/code&gt; to retrieve the secret, which is cleaner than the
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.authfile.gpg&lt;/code&gt; solution.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.offlineimap.org/&quot;&gt;Offlineimap&lt;/a&gt; users can use the &lt;a href=&quot;https://keyring.readthedocs.io/en/latest/&quot;&gt;keyring&lt;/a&gt; package to
+store their secrets, but since python2 is deprecated, in some Linux distributions the
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;python2&lt;/code&gt; version bundled with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;offlineimap&lt;/code&gt; won’t be able to load external packages.&lt;/p&gt;
+
+&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li class=&quot;publications&quot;&gt;&lt;a href=&quot;https://www.gnu.org/software/emacs/manual/html_mono/auth.html#Secret-Service-API&quot;&gt;Secret-Service-API&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</content><author><name>M.</name><email>contact@deathwish.info</email></author><category term="linux" /><category term="emacs" /><summary type="html">Usually people set their Emacs credentials on a possible encrypted .authfile. If your system uses the secret service for managing secrets, using it is a better alternative.</summary></entry><entry><title type="html">The Clifford algebra and Spin groups</title><link href="https://deathwish.info/2019/11/15/clifford/" rel="alternate" type="text/html" title="The Clifford algebra and Spin groups" /><published>2019-11-15T00:00:00+00:00</published><updated>2019-11-15T00:00:00+00:00</updated><id>https://deathwish.info/2019/11/15/clifford</id><content type="html" xml:base="https://deathwish.info/2019/11/15/clifford/">&lt;p&gt;Let \(g\) be an bilinear symmetric form on a real vector space \(V\).&lt;/p&gt;
+
+&lt;blockquote class=&quot;definition&quot;&gt;
+  &lt;p&gt;&lt;strong&gt;Definition&lt;/strong&gt;: The &lt;em&gt;complex Clifford algebra&lt;/em&gt; \(\mathbb{C}l(V)\) is the complex
+unital algebra generated by elements \(v \in V\) with product defined by&lt;/p&gt;
+
+\[u \cdot v + v \cdot u = 2 g(u,v).\]
+&lt;/blockquote&gt;
+
+&lt;p&gt;When \(V = \mathbb{R}^n\) and \(g\) is the usual euclidean metric, we denote the
+Clifford algebra by \(\mathbb{C}l(V)\).&lt;/p&gt;
+
+&lt;p&gt;By choosing a basis \(e_1,\dots, e_n\) for \(V\), we can see that \(e_{i_1}\cdots
+e_{i_k}\) where \(1 \leq i_1 \le \cdots \le i_k \leq n\) form a basis and the complex
+dimension of \(\mathbb{C}l(V)\) is \(2^n\). This post aims to show some of the
+structures that the Clifford algebras has.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;h2 id=&quot;the-many-structures-enjoyed-by-mathbbcl&quot;&gt;The many structures enjoyed by \(\mathbb{C}l\)&lt;/h2&gt;
+
+&lt;p&gt;The Clifford algebra comes naturally
+with a \(\mathbb{Z}\)-grading given by \(\mathbb{C}l(n)_k = \langle  e_{i_1}\cdots
+e_{i_k}\rangle_{1 \leq i_1 \le \cdots \le i_k \leq n}\).&lt;/p&gt;
+
+&lt;p&gt;We have a natural Hilbert space structure in
+\(\mathbb{C}l(V)\) given by&lt;/p&gt;
+
+\[\langle e_{i_1} \dots e_{i_k}, e_{j_1} \dots e_{j_l}\rangle = 0\]
+
+&lt;p&gt;if \(k \not= s\) or if \(i_1 &amp;lt; \cdots &amp;lt; i_k\) is not the same sequence as \(j_1 &amp;lt; \cdots
+&amp;lt; j_s\), and declaring that the elements \(e_{i_1} \dots e_{i_k}\) are normal.&lt;/p&gt;
+
+&lt;p&gt;We also have a \(^*\)-algebra structure given by&lt;/p&gt;
+
+\[(e_{i_1} \dots e_{i_k})^* = e_{i_k} \dots e_{i_1}\]
+
+&lt;p&gt;and a trace \(\tau\), such that \(\tau(1) = 1\) given by
+\(\tau(e_{i_1} \dots e_{i_k}) = 0\) whenever \(k \geq 1\).&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Proposition&lt;/strong&gt;: We have that the inner product is given by&lt;/p&gt;
+
+\[\langle a, b \rangle = \tau(a^*b).\]
+
+  &lt;p&gt;The inner product coincides with \(g\) in \(V\) and
+   we have \(\lVert a^* a \rVert
+   = \lVert a \rVert^2\), \(\mathbb{C}l(V)\) becomes a \(C^*\)-algebra.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Let \(n= 2m, 2m+1\) and let \(\gamma = (-1)^m e_1\cdots
+e_n\) be the top element in the Clifford algebra, the so-called &lt;em&gt;chirality
+element&lt;/em&gt;, we have that \(\gamma\) does not depend on the choice of orthogonal basis and&lt;/p&gt;
+
+\[\gamma^* = \gamma,\quad \gamma^* \gamma = 1.\]
+
+&lt;p&gt;Let \(\chi : \mathbb{C}l(V) \to \mathbb{C}l(V)\) given by \(\chi(a) = \gamma\, a\,
+\gamma^*\), we have that \(\chi(v) = (-1)^{n + 1} v\) for all \(v \in V\). If the
+dimension of \(V\) is even, the
+endomorphism \(\chi\) induces a \(\mathbb{Z}_2\)-grading given by&lt;/p&gt;
+
+\[\mathbb{C}l(V)^{\pm} = \{ a \in \mathbb{C}l(V) \mid \chi(a) = \pm a \}.\]
+
+&lt;p&gt;otherwise \(\chi = \text{Id}\) and \(\gamma\) is in the center of the Clifford algebra.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Lemma:&lt;/strong&gt; The center of the Clifford algebra is \(\mathbb{C}\) if \(V\) is
+even-dimensional or \(\mathbb{C} \oplus \gamma \mathbb{C}\) if \(V\) is odd-dimensional.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;the-spin-group&quot;&gt;The Spin group&lt;/h2&gt;
+
+&lt;blockquote class=&quot;definition&quot;&gt;
+  &lt;p&gt;&lt;strong&gt;Definition&lt;/strong&gt;: We say that \(u \in \mathbb{C}l(V)\) is &lt;em&gt;unitary&lt;/em&gt; if
+\(u^*u = uu^*= 1\) and the operators \(a \mapsto ua\) are unitary for any
+unitary element \(u\).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The &lt;em&gt;Spin group&lt;/em&gt; \(Spin(V)\) is the set of unitary elements \(u\) such that&lt;/p&gt;
+
+\[u = \sum_K a_K e_K\]
+
+&lt;p&gt;where \(K = i_1 &amp;lt; \cdots &amp;lt; i_{2s}\) is a multi-index of even length and \(a_K\) is
+real for all \(K\). \(Spin(V)\) has a natural multiplication and inversion and
+\(1 \in \mathbb{C}l(V)\) is in \(Spin(V)\) and corresponds to its identity.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Proposition&lt;/strong&gt;: \(Spin(V)\) is a connected Lie group, simply connected for
+\(n &amp;gt; 2\). It is the double cover of \(SO(V)\).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;em&gt;Proof&lt;/em&gt;: \(Spin(V)\) is given by algebraic equations and therefore is an algebraic
+group.&lt;/p&gt;
+
+&lt;p&gt;Let \(\phi: Spin(V) \to \text{End}(V)\) given by \(\phi(u)x = uxu^*\), then
+since&lt;/p&gt;
+
+\[g(\phi(u) x ,\phi(u) x ) = \tau( (uxu^*)^* uxu^*) = \tau(x^*x) = g(x,x),
+    \quad x \in V.\]
+
+&lt;p&gt;So \(\phi(u)\) is actually in \(O(V)\) and \(\det(\phi(u)) = \pm 1\). We extend the
+definition of \(\phi\) for all invertible \(a \in \mathbb{C}l(V)\) as \(\phi(a)x =
+\chi(a)xa^{-1}\), we note that for a unitary vector \(v\in V\)&lt;/p&gt;
+
+\[\phi(v)x = -vxv = (xv - g(x,v))v = x - g(x,v)v\]
+
+&lt;p&gt;which is the reflection with respect of \(v\), since all elements of \(SO(V)\) are
+generated by an even number of these we see that \(\phi\) is onto \(SO(V)\).&lt;/p&gt;
+
+&lt;p&gt;Suppose that \(u\) is in the kernel of \(\phi\) then \(u\) commutes with all \(x \in
+V\) and \(u\) is in the center of the Clifford algebra. By considering by separated
+the cases of odd and even dimension we see that \(u \in \mathbb{C}\) is real and
+unitary, hence \(u = \pm 1\).&lt;/p&gt;
+
+&lt;p&gt;By the exact sequence&lt;/p&gt;
+
+\[1 \longrightarrow \mathbb{Z}_2 \longrightarrow Spin(V) \longrightarrow SO(V)
+    \longrightarrow 1\]
+
+&lt;p&gt;and the &lt;a href=&quot;https://ncatlab.org/nlab/show/long+exact+sequence+of+homotopy+groups&quot;&gt;long exact sequence of homotopy groups&lt;/a&gt;
+we have that \(\pi_0(Spin(V)) = 1\) and we also have the exact sequence
+\(1 \longrightarrow \pi_1(SO(V)) \longrightarrow \pi_1(Spin(V))) \longrightarrow 1 .\)&lt;/p&gt;
+
+&lt;p&gt;Finishing the proof. \(\square\)&lt;/p&gt;</content><author><name>M.</name><email>contact@deathwish.info</email></author><summary type="html">Let \(g\) be an bilinear symmetric form on a real vector space \(V\).</summary></entry><entry><title type="html">The Picard group of an elliptic variety</title><link href="https://deathwish.info/2019/11/06/picard/" rel="alternate" type="text/html" title="The Picard group of an elliptic variety" /><published>2019-11-06T00:00:00+00:00</published><updated>2019-11-06T00:00:00+00:00</updated><id>https://deathwish.info/2019/11/06/picard</id><content type="html" xml:base="https://deathwish.info/2019/11/06/picard/">&lt;p&gt;Let \(X = \mathbb{C} / \Lambda\), where \(\Lambda\) is the lattice generated by \(1,
+\tau \in \mathbb{C}\), for some \(\tau\) with \(\text{Im}(\tau) &amp;gt; 0\). We want to show some explicit forms
+for the moduli space of line bundles over \(X\), the so called Picard group
+\(\text{Pic}(X)\). This moduli space is endowed with a group structure provided by tensor
+products, this post intends to give a brief exposition on the structure of the
+Picard groups and the Chern classes of elliptic curves.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;Let \(\mathcal{O}_X\) be the sheaf of holomorphic functions on \(X\), and let
+\(\mathcal{O}_X^*\) be the sheaf of invertible holormorphic functions. We have the
+following.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Proposition&lt;/strong&gt;: The Picard group is isomorphic to the &lt;a href=&quot;https://en.wikipedia.org/wiki/%C4%8Cech_cohomology&quot;&gt;Čech cohomology&lt;/a&gt; group \(H^1(X, \mathcal{O}_X^*)\).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;em&gt;Proof&lt;/em&gt;:
+Let \((t_{\alpha, \beta}, U_\alpha \cap U_\beta)\) be an element of
+\(H^1(X, \mathcal{O}_X^*)\) where \(U_\alpha\) is an open cover of \(X\),
+by definition it satisfies&lt;/p&gt;
+
+\[1 = dt_{\alpha\beta\gamma} =  t_{\alpha\beta}  t_{\beta\gamma}  t_{\gamma\alpha}\]
+
+&lt;p&gt;on \(U_\alpha \cap U_\beta \cap U_\gamma\). Consider
+\(L = \left(\bigcup_\alpha U_\alpha \times \mathbb{C} \right) /\sim\), where if \(x \in
+U_\alpha \cap U_\beta\), \((x, u)_\alpha \sim (x, t_{\beta \alpha} u)_\beta\). One
+can check that thanks to the co-cycle identity this defines a equivalence
+relation and we have natural charts \(U_\alpha \times \mathbb{C} \to L\) given by
+\(t_\alpha\) which define a holomorphic line bundle structure in \(L\). On the other
+hand if \(t_{\alpha\beta}\) is trivial, i.e. there are functions \(g_\alpha \in
+\mathcal{O}(U_\alpha) ^*\) such that \(t_{\alpha\beta} = g_\alpha/g_\beta\), then . Conversely,
+fixing any trivialization \(\varphi_\alpha\), noting that the maps \(\varphi_\alpha
+\varphi_\beta^{-1}\) are given by an element of \(t_{\alpha\beta}: U_\alpha \cap
+U_\beta \to GL(1, \mathbb{C}) =
+\mathbb{C}^*\), we have that \(t_{\alpha\beta}  t_{\beta\gamma}  t_{\gamma\alpha}\)
+is given by \(\varphi_\alpha\varphi_\beta^{-1}\varphi_\beta
+\varphi_\gamma^{-1}\varphi_\gamma\varphi_\alpha^{-1} = Id\) so the co-cycle
+identity holds.&lt;/p&gt;
+
+&lt;p&gt;Let \(\mathbb{Z}\) be the sheaf of locally constant \(\mathbb{Z}\)-valued functions
+on \(X\). Consider the exact sequence&lt;/p&gt;
+
+\[0 \longrightarrow \mathbb{Z}_X \longrightarrow \mathcal{O}_X \overset{exp}{\longrightarrow}
+    \mathcal{O}_X^* \longrightarrow 0.\]
+
+&lt;p&gt;This induces an exact sequence&lt;/p&gt;
+
+\[H^1(X,\mathbb{Z}_X)\longrightarrow H^1(X, \mathcal{O}_X) \longrightarrow H^1(X,
+    \mathcal{O}_X^*)\overset{c_1}{\longrightarrow} H^2(X,\mathbb{Z}_X)\]
+
+&lt;h2 id=&quot;the-chern-class-of-a-line-bundle&quot;&gt;The Chern class of a line bundle&lt;/h2&gt;
+
+&lt;p&gt;We define the &lt;em&gt;Chern class&lt;/em&gt; of a line bundle \(L\) as \(c_1(L) \in H^2(X,\mathbb{Z})\). Everything in the
+previous diagram is natural so for any morphism \(f:X \to Y\) we have that
+\(f^*c_1(L) = c_1(f^*L)\) for any line bundle \(L \in \text{Pic}(Y)\).&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Proposition&lt;/strong&gt;: A complex line bundle \(L\) is topologically trivial if and only if \(c_1(L) = 0\).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;em&gt;Proof&lt;/em&gt;: Let \(C^\infty_X\) be the sheaf of smooth functions on \(X\). Now we have&lt;/p&gt;
+
+\[H^k(X,C^\infty_X) = 0, \qquad k &amp;gt; 0.\]
+
+&lt;p&gt;So repeating the exercise on the induced long exact sequence for&lt;/p&gt;
+
+\[0 \longrightarrow \mathbb{Z}_X \longrightarrow C^\infty_X \longrightarrow
+    {C^\infty_X}^* \longrightarrow 0.\]
+
+&lt;p&gt;We get that \(c_1: H^1(X, {C^\infty_X}^*) \to H^2(X, \mathbb{Z})\) is an
+isomorphism. The natural morphism \(\mathcal{O}_X \to C^\infty_X\)
+induces a map of the previosly mentioned long exact sequences that it is the
+identity on \(\mathbb{Z}_X\), this means that \(c_1(L) = 0\) holds as a complex
+line bundle if and only if it holds as a smooth line bundle as a smooth line
+bundle and since \(c_1\) is an isomorphism for smooth line bundles, \(L\) is
+a topologically trivial line bundle. \(\square\)&lt;/p&gt;
+
+&lt;p&gt;By &lt;a href=&quot;https://ncatlab.org/nlab/show/Dolbeault%20theorem&quot;&gt;Dolbeaut’s theorem&lt;/a&gt; and
+the fact that the de Rham cohomology satisfies \(H^p(X,\mathbb{Z}) =
+H^p(X,\mathbb{Z}_X)\), the long exact sequence is reduced to&lt;/p&gt;
+
+\[0 \longrightarrow
+    H^1(X,\mathbb{Z})\longrightarrow H^{0,1}(X, \mathbb{C}) \longrightarrow \text{Pic}(X)\overset{c_1}{\longrightarrow}  H^2(X,\mathbb{Z}) \longrightarrow 0\]
+
+&lt;p&gt;So we identify the kernel \(\text{Pic}_0(X)\) of \(c_1\) with the quotient \(H^{0,1}(X,
+\mathbb{C}) / H^1(X,\mathbb{Z})\). Now, as&lt;/p&gt;
+
+\[h^{0,1}(X,\mathbb{C}) = h^{0,1}(X,\mathbb{C}), \quad h^1(X,\mathbb{C}) = 2.\]
+
+&lt;p&gt;The space \(H^{0,1}(X,
+\mathbb{C})\) can be identified with \(\mathbb{C} \cdot d\bar{z} \cong \overline{\mathbb{C}}^*\) and since
+\(H_1(X, \mathbb{Z})\) can be identified with \(\Lambda\), via &lt;a href=&quot;https://ncatlab.org/nlab/show/Poincar%C3%A9+duality&quot;&gt;Poincaré
+duality&lt;/a&gt; we can see that
+\(H^1(X,\mathbb{Z})\) is given by&lt;/p&gt;
+
+\[\Lambda^* = \{ u \mid \langle u, \lambda
+    \rangle \in \mathbb{Z},\quad \forall\ \lambda \in \Lambda \}.\]
+
+&lt;p&gt;We now have an identification \(\text{Pic}_0(X)=\overline{\mathbb{C}}/\Lambda^*\), this endows
+\(\text{Pic}_0(X)\) with the structure of an elliptic curve. Note that \(X\) is
+isomorphic to \(\text{Pic}_0(X)\) and \(\text{Pic}(X)/ \text{Pic}_0(X) = H^2(X,\mathbb{Z})\).&lt;/p&gt;
+
+&lt;h2 id=&quot;bibliography&quot;&gt;Bibliography&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li class=&quot;publications&quot;&gt;
+    &lt;p&gt;Griffiths, P. &lt;em&gt;Principles of algebraic geometry&lt;/em&gt;. Wiley. 1978.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li class=&quot;publications&quot;&gt;
+    &lt;p&gt;Miranda, R. &lt;em&gt;Algebraic curves and Riemann surfaces&lt;/em&gt;. American
+  Mathematical Soc. 1995.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name>M.</name><email>contact@deathwish.info</email></author><category term="algebraic-geometry" /><summary type="html">Let \(X = \mathbb{C} / \Lambda\), where \(\Lambda\) is the lattice generated by \(1, \tau \in \mathbb{C}\), for some \(\tau\) with \(\text{Im}(\tau) &amp;gt; 0\). We want to show some explicit forms for the moduli space of line bundles over \(X\), the so called Picard group \(\text{Pic}(X)\). This moduli space is endowed with a group structure provided by tensor products, this post intends to give a brief exposition on the structure of the Picard groups and the Chern classes of elliptic curves.</summary></entry><entry><title type="html">Cauchy theory and Fourier analysis</title><link href="https://deathwish.info/2019/11/02/cauchy-fourier/" rel="alternate" type="text/html" title="Cauchy theory and Fourier analysis" /><published>2019-11-02T00:00:00+00:00</published><updated>2019-11-02T00:00:00+00:00</updated><id>https://deathwish.info/2019/11/02/cauchy-fourier</id><content type="html" xml:base="https://deathwish.info/2019/11/02/cauchy-fourier/">&lt;p&gt;Suppose that \(f: U \to \mathbb{C}\) is a holomorphic function in an open set \(U
+\subseteq \mathbb{C}\) which is of class \(C^1(U)\) as a function defined on \(U
+\subseteq \mathbb{R}^2\), without loss of generality we can assume that the ball of radius \(R\) and center \(0\) is
+contained in \(U\), we can consider for any \(r &amp;lt; R\) the function&lt;/p&gt;
+
+\[F(r,\theta) = f(r e^{i \theta}), \qquad r &amp;gt; 0,\ \theta \in [0, 2\pi).\]
+
+&lt;p&gt;The idea is to study the behavior of \(f\) in terms of the Fourier transform of
+\(F\) in its second variable and use this to prove Cauchy’s theorem. This is a
+well-understood fact that is not usually noted in a complex analysis course.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;First let us note that by Cauchy’s identities \(f\) is holomorphic if and only if \(\overline{\partial} f
+= 0\) where, \(\overline{\partial} = \partial_x + i \partial_y\) and its derivative is given by \(\partial f = \partial_x f
+-i \partial_y f\).&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Proposition&lt;/strong&gt;: If \(f\) is infinitely differentiable we have that \(f^{(k)}\) is
+also an holomorphic function for all \(k\geq 0\).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;em&gt;Proof&lt;/em&gt;: Note that \(\overline{\partial} \partial = \partial\overline{\partial}\)
+so in particular \(\overline{\partial} \partial^k f = \partial^k
+\overline{\partial}f = 0\).\(\square\)&lt;/p&gt;
+
+&lt;p&gt;Using the chain rule&lt;/p&gt;
+
+\[\begin{aligned}
+\partial_x &amp;amp;= \cos(\theta)\partial_r - \frac{1}{r}\sin(\theta) \partial_\theta\\
+    \partial_y &amp;amp;= \sin(\theta)\partial_r + \frac{1}{r}\cos(\theta) \partial_\theta
+\end{aligned}\]
+
+&lt;p&gt;and&lt;/p&gt;
+
+\[\overline{\partial} = e^{i\theta}\left( \partial_r + \frac{i}{r} \partial_\theta\right).\]
+
+&lt;p&gt;So in particular for a holomorphic function \(F\), using the identities \(\widehat f' (k) = i\,k\,
+\widehat f(k)\) and \(\widehat{e^{i\theta} f(\theta)} (k) = \widehat f(k-1)\), we have&lt;/p&gt;
+
+\[0 = \widehat {\overline{\partial}F}(r,k+1) = \partial_r \widehat{F} (r,k) -
+\frac{k}{r} \widehat{F}(r,k).\]
+
+&lt;p&gt;Note that here we need to use the fact that \(f\) is of class \(C^1\) to
+differentiate under the integral sign. If such \(F\) comes from an holomorphic function then, solving the differential
+equation given above, we get&lt;/p&gt;
+
+\[\widehat{F}(r,k) = \frac{1}{\sqrt{2\pi}} \int_0^{2\pi} F(r,\theta) e^{-i k\theta}\,d\theta= C_k r^k,\]
+
+&lt;p&gt;for some constants \(C_k \in \mathbb{C}\), which are given by&lt;/p&gt;
+
+\[C_k = r^{-k} \widehat{F}(r,k) = \frac{1}{\sqrt{2\pi}} r^{-k} \int_0^{2 \pi} f(re^{i k \theta}) e^{- i
+k \theta} d\theta,\]
+
+&lt;p&gt;Let us compute the Fourier inversion formula for \(F\),&lt;/p&gt;
+
+\[F(r,\theta) = \frac{1}{\sqrt{2\pi}} \sum_{k=-\infty}^{\infty} \widehat{F}(r,k) e^{i k
+\theta} = \frac{1}{\sqrt{2\pi}} \sum_{k=-\infty}^{\infty} C_k r^k e^{i k \theta},\]
+
+&lt;p&gt;and let \(r_0 &amp;lt; R\). If we do the substitution \(\gamma(\theta) = r_0 e^{i\theta}\),
+we obtain&lt;/p&gt;
+
+\[a_k := \frac{1}{\sqrt{2\pi}} C_k = \frac{1}{2 \pi i}\int_{\gamma} \frac{f(w)}{w^{k+1}} dw.\]
+
+&lt;p&gt;Consider the function \(g(z) = \sum_k a_k z^k\) for any \(z\) with \(\vert z\rvert =
+r &amp;lt; r_0\)
+then, since&lt;/p&gt;
+
+\[\lvert a_k\rvert \leq \frac{C(r)}{r_0^k},\qquad C(r) = \sup_{\lvert z \rvert = r}\lvert f(z)\rvert\]
+
+&lt;p&gt;we have that&lt;/p&gt;
+
+\[\sum_k \lvert a_k z^k \rvert &amp;lt; C(r) \sum_k \left(\frac{r}{r_0} \right)^k &amp;lt; \infty,\]
+
+&lt;p&gt;the series for \(g\) converges absolutely, so it is an analytic function and
+therefore holomorphic. A small computation shows that if \(G(r,\theta) =
+g(re^{i\theta})\) then for all \(k,r\) we have \(\widehat{F}(r,k) =
+\widehat{G}(r,k)\), so by uniqueness of the Fourier transform \(f=g\) for all \(r &amp;lt;
+r_0\), since this analysis was done for arbitrary \(r_0 &amp;lt; R\) we have that&lt;/p&gt;
+
+\[f(z) = \sum_k a_k z^k, \qquad \lvert z \rvert &amp;lt; R,\]
+
+&lt;p&gt;where by definition \(a_k = \frac{f^{(k)}(0)}{k!}\) and by our previous analysis we get&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Theorem&lt;/strong&gt;: Let \(f\) be a holomorphic function of class \(C^1\) on a disk of radius \(R &amp;gt; 0\)
+around \(0\). Then \(f\) is infinitely
+differentiable and for all \(k \geq 0\) we have for all \(r &amp;lt; R\)&lt;/p&gt;
+
+\[f^{(k)}(0) = \frac{k!}{2 \pi i}\int_{\gamma} \frac{f(w)}{w^{k+1}}\,dw,\]
+
+  &lt;p&gt;where \(\gamma\) is the closed loop given by \(\gamma(\theta) = re^{i\theta}\).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;This analysis shows that in fact holomorphic functions are the same as analytic
+functions under the mild hypothesis that their first derivative is continuous.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Corollary&lt;/strong&gt;: Let \(f:U \to \mathbb{C}\) be a holomorphic function of class \(C^1(U)\), then \(f\)
+is analytic on any ball contained in \(U\).&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>M.</name><email>contact@deathwish.info</email></author><category term="complex-analysis" /><summary type="html">Suppose that \(f: U \to \mathbb{C}\) is a holomorphic function in an open set \(U \subseteq \mathbb{C}\) which is of class \(C^1(U)\) as a function defined on \(U \subseteq \mathbb{R}^2\), without loss of generality we can assume that the ball of radius \(R\) and center \(0\) is contained in \(U\), we can consider for any \(r &amp;lt; R\) the function</summary></entry><entry><title type="html">Multimedia codecs in Fedora</title><link href="https://deathwish.info/2019/10/19/codecs/" rel="alternate" type="text/html" title="Multimedia codecs in Fedora" /><published>2019-10-19T00:00:00+00:00</published><updated>2019-10-19T00:00:00+00:00</updated><id>https://deathwish.info/2019/10/19/codecs</id><content type="html" xml:base="https://deathwish.info/2019/10/19/codecs/">&lt;p&gt;Most codecs contain pieces of software which are not free or cannot be included
+in Fedora repositories, adding rpm-fusion’s repositories is required to for many
+codecs to work, we show methods on how to get codecs working in Fedora.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;h2 id=&quot;enabling-rpm-fusion-repositories&quot;&gt;Enabling rpm-fusion repositories&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Fedora (22 and later):&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Silverblue (29 and later):&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo rpm-ostree install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;See &lt;a href=&quot;https://rpmfusion.org/Configuration&quot;&gt;rpmfusion.org/Configuration&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;option-a-minimal-setup&quot;&gt;Option A: Minimal setup&lt;/h2&gt;
+
+&lt;p&gt;A minimal setup to run Firefox consists of&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Fedora: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo dnf install ffmpeg-libs&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Silverblue: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo rpm-ostree install ffmpeg-libs&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This is enough to view YouTube and to browse Reddit, see &lt;a href=&quot;https://www.youtube.com/html5&quot;&gt;Youtube’s HTML5 test&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;option-b-alternative-minimal-setup&quot;&gt;Option B: Alternative Minimal setup&lt;/h2&gt;
+
+&lt;p&gt;Alternatively one can use the packages &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ffmpeg&lt;/code&gt; and Cisco’s h264 codecs
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mozilla-openh264, gstreamer1-plugin-openh264&lt;/code&gt;, the later are in the
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fedora-cisco-openh264&lt;/code&gt; repository which can be enabled via&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Fedora: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo dnf config-manager --set-enabled fedora-cisco-openh264&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Silverblue: edit the file &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/yum.repos.d/fedora-cisco-openh264.repo&lt;/code&gt; and
+set &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;enabled&lt;/code&gt;’s value to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;option-c-complete-suite-of-codecs&quot;&gt;Option C: Complete suite of codecs&lt;/h2&gt;
+
+&lt;p&gt;To install the complete suite of multimedia codecs:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Fedora: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo dnf groupupdate Multimedia&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This won’t do anything if rpm-fusion’s repositories are not enabled.&lt;/p&gt;
+
+&lt;h2 id=&quot;vlc-and-gnome-videos&quot;&gt;VLC and GNOME Videos&lt;/h2&gt;
+
+&lt;p&gt;While the previous method is perfectly fine for running VLC, it is more
+advisable
+to install VLC via Flatpak. This Flatpak comes bundled with all necessary codecs and
+dependencies by default.&lt;/p&gt;
+
+&lt;p&gt;First add &lt;a href=&quot;https://www.flathub.org/home&quot;&gt;Flathub&lt;/a&gt; repository:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Then install VLC via:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;flatpak install flathub org.videolan.VLC&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Alternatively, you can install GNOME Videos:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;flatpak install flathub org.gnome.Totem&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;firefox-flatpak&quot;&gt;Firefox flatpak&lt;/h2&gt;
+
+&lt;p&gt;If you are using the &lt;a href=&quot;https://flathub.org/apps/details/org.mozilla.firefox&quot;&gt;official Firefox Flatpak&lt;/a&gt;, which can be installed via&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;flatpak install flathub org.mozilla.firefox&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;then you don’t need any additional codecs. If you rather use ffmpeg codecs
+instead of openh264, install the ffmpeg Flatpak extension version:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;flatpak install org.freedesktop.Platform.ffmpeg-full&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;which matches the runtime of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;org.mozilla.firefox&lt;/code&gt;, which is usually the latest.&lt;/p&gt;</content><author><name>M.</name><email>contact@deathwish.info</email></author><category term="linux" /><summary type="html">Most codecs contain pieces of software which are not free or cannot be included in Fedora repositories, adding rpm-fusion’s repositories is required to for many codecs to work, we show methods on how to get codecs working in Fedora.</summary></entry><entry><title type="html">Using Emacs to read your email with ProtonMail</title><link href="https://deathwish.info/2019/10/19/mu4e/" rel="alternate" type="text/html" title="Using Emacs to read your email with ProtonMail" /><published>2019-10-19T00:00:00+00:00</published><updated>2019-10-19T00:00:00+00:00</updated><id>https://deathwish.info/2019/10/19/mu4e</id><content type="html" xml:base="https://deathwish.info/2019/10/19/mu4e/">&lt;p&gt;This guide will cover the basics on how to integrate Emacs with the ProtonMail using&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.djcbsoftware.nl/code/mu/mu4e.html&quot;&gt;mu4e&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;mbsync&lt;/li&gt;
+  &lt;li&gt;smtpmail&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://protonmail.com/bridge/&quot;&gt;ProtonMail Bridge&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;How to install them:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Fedora: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo dnf install isync maildir-utils&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Debian: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo apt install isync maildir-utils&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- more --&gt;
+
+&lt;h2 id=&quot;installing-protonmail-bridge-via-flatpak&quot;&gt;Installing ProtonMail Bridge via Flatpak&lt;/h2&gt;
+
+&lt;p&gt;First add &lt;a href=&quot;https://www.flathub.org/home&quot;&gt;Flathub&lt;/a&gt; Flatpak repository:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then install &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;protonmail-bridge&lt;/code&gt; via:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;flatpak install flathub ch.protonmail.protonmail-bridge
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;configuring-mbsync&quot;&gt;Configuring mbsync&lt;/h2&gt;
+
+&lt;p&gt;Create a configuration file &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.mbsyncrc&lt;/code&gt; for mbsync&lt;/p&gt;
+
+&lt;div class=&quot;language-conf highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;IMAPAccount&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;protonmail&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Host&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;127&lt;/span&gt;.&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;.&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;.&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Port&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1143&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;PassCmd&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;gpg -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk 'FNR == 1 {print $8}'&quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;SSLType&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;STARTTLS&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;SSLVersions&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TLSv1&lt;/span&gt;.&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;CertificateFile&lt;/span&gt; ~/.&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;protonmail&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;bridge&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;cert&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;pem&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;IMAPStore&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;remote&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Account&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;protonmail&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#You can change .mail to something else
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MaildirStore&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;local&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Path&lt;/span&gt; ~/.&lt;span class=&quot;n&quot;&gt;mail&lt;/span&gt;/
+&lt;span class=&quot;n&quot;&gt;Inbox&lt;/span&gt; ~/.&lt;span class=&quot;n&quot;&gt;mail&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;INBOX&lt;/span&gt;/
+
+&lt;span class=&quot;n&quot;&gt;Channel&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;inbox&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Master&lt;/span&gt; :&lt;span class=&quot;n&quot;&gt;remote&lt;/span&gt;:
+&lt;span class=&quot;n&quot;&gt;Slave&lt;/span&gt; :&lt;span class=&quot;n&quot;&gt;local&lt;/span&gt;:
+&lt;span class=&quot;n&quot;&gt;Patterns&lt;/span&gt; *
+&lt;span class=&quot;n&quot;&gt;Create&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Both&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Expunge&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Both&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;SyncState&lt;/span&gt; *
+
+&lt;span class=&quot;n&quot;&gt;Group&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;protonmail&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Channel&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;inbox&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;alternative-using-offlineimap&quot;&gt;(Alternative) Using offlineimap&lt;/h2&gt;
+
+&lt;p&gt;Alternatively install &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;offlineimap&lt;/code&gt; with the following config at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.offlineimaprc&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-conf highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# ~/.offlineimaprc
+&lt;/span&gt;
+[&lt;span class=&quot;n&quot;&gt;general&lt;/span&gt;]
+&lt;span class=&quot;n&quot;&gt;accounts&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;protonmail&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;pythonfile&lt;/span&gt; = ~/.&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;offlineimap&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;keyring&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;metadata&lt;/span&gt; = ~/.&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;offlineimap&lt;/span&gt;
+
+[&lt;span class=&quot;n&quot;&gt;Account&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;protonmail&lt;/span&gt;]
+&lt;span class=&quot;n&quot;&gt;remoterepository&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;protonmail&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;remote&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;localrepository&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;protonmail&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;local&lt;/span&gt;
+
+[&lt;span class=&quot;n&quot;&gt;Repository&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;protonmail&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;local&lt;/span&gt;]
+&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;Maildir&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;localfolders&lt;/span&gt; = ~/.&lt;span class=&quot;n&quot;&gt;mail&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;sync_deletes&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;no&lt;/span&gt;
+
+[&lt;span class=&quot;n&quot;&gt;Repository&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;protonmail&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;remote&lt;/span&gt;]
+&lt;span class=&quot;n&quot;&gt;expunge&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;IMAP&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;remotehost&lt;/span&gt; = &lt;span class=&quot;m&quot;&gt;127&lt;/span&gt;.&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;.&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;.&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;remoteport&lt;/span&gt;= &lt;span class=&quot;m&quot;&gt;1143&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;remoteuser&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;USERNAME&lt;/span&gt;@&lt;span class=&quot;n&quot;&gt;protonmail&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;remotepasseval&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;get_password&lt;/span&gt;(&lt;span class=&quot;s2&quot;&gt;&quot;USERNAME@protonmail.com&quot;&lt;/span&gt;)
+&lt;span class=&quot;c&quot;&gt;# Alternatively, use
+# remotepass = &amp;lt;YOUR BRIDGE-SPECIFIC PASSWORD&amp;gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nametrans&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;foldername&lt;/span&gt;: &lt;span class=&quot;n&quot;&gt;re&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt; (&lt;span class=&quot;s1&quot;&gt;'^Folders.'&lt;/span&gt;, &lt;span class=&quot;s1&quot;&gt;''&lt;/span&gt;, &lt;span class=&quot;n&quot;&gt;foldername&lt;/span&gt;)
+&lt;span class=&quot;n&quot;&gt;folderfilter&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;foldername&lt;/span&gt;: &lt;span class=&quot;n&quot;&gt;foldername&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;in&lt;/span&gt; [&lt;span class=&quot;s1&quot;&gt;'All Mail'&lt;/span&gt;]
+&lt;span class=&quot;n&quot;&gt;ssl&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;no&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# ssl is broken.
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;starttls&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ssl_version&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;tls1_2&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;sslcacertfile&lt;/span&gt; = ~/.&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;protonmail&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;bridge&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;cert&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;pem&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Where one possible script is&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;#!/usr/bin/env python3
+# ~/.config/offlineimap/keyring.py
+&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;re&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;os&lt;/span&gt;
+
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_password&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;login&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;machine&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;127.0.0.1&quot;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;1143&quot;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;machine %s port %s login %s password ([^ ]*)&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;machine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;login&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;re&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;compile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;authinfo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;popen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&quot;gpg -q --no-tty -d ~/.authinfo.gpg&quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;search&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;authinfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;group&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: offlineimap depends on Python 2.7 which is deprecated.&lt;/p&gt;
+
+&lt;h2 id=&quot;logging-credentials&quot;&gt;Logging credentials&lt;/h2&gt;
+
+&lt;p&gt;Next we need to create a file to log our credentials for sending mail with smtpmail. Create a file &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.authinfo&lt;/code&gt; with the following contents:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;machine 127.0.0.1 port 1143 login USERNAME@protonmail.com password BRIDGE_PASSWORD
+machine 127.0.0.1 port 1025 login USERNAME@protonmail.com password BRIDGE_PASSWORD
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You should encrypt it, one option is to use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;epa&lt;/code&gt; in Emacs
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;M-x epa-encrypt-file&lt;/code&gt;.
+Another is to set a symmetric encryption that will require some password
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$ gpg --symetric .authinfo&lt;/code&gt;. Finally, delete &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.authinfo&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now to get/sync you mail, run on a terminal &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$ mbsync protonmail&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;configuring-mu4e&quot;&gt;Configuring mu4e&lt;/h2&gt;
+
+&lt;p&gt;This is a minimal configuration that you should include in your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;init.el&lt;/code&gt; configuration file.&lt;/p&gt;
+
+&lt;div class=&quot;language-lisp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'mu4e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;mu4e-maildir&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;~/.mail&quot;&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;mu4e-attachment-dir&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;~/Downloads&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;user-mail-address&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;USERNAME_HERE@protonmail.com&quot;&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;user-full-name&lt;/span&gt;  &lt;span class=&quot;s&quot;&gt;&quot;YOUR_NAME&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;;; Get mail&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;mu4e-get-mail-command&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mbsync protonmail&quot;&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;mu4e-change-filenames-when-moving&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;t&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;; needed for mbsync&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;mu4e-update-interval&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;120&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;             &lt;span class=&quot;c1&quot;&gt;; update every 2 minutes&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;;; Send mail&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;setq&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;message-send-mail-function&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'smtpmail-send-it&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;smtpmail-auth-credentials&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;~/.authinfo.gpg&quot;&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;smtpmail-smtp-server&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;127.0.0.1&quot;&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;smtpmail-stream-type&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'starttls&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;smtpmail-smtp-service&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1025&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;add-to-list&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;'gnutls-trustfiles&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;expand-file-name&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;~/.config/protonmail/bridge/cert.pem&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To index your emails from the terminal run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mu index --maildir=~/.mail&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now just launch &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;M-x mu4e&lt;/code&gt; from Emacs to read your mail.&lt;/p&gt;</content><author><name>M.</name><email>contact@deathwish.info</email></author><category term="linux" /><summary type="html">This guide will cover the basics on how to integrate Emacs with the ProtonMail using</summary></entry></feed>

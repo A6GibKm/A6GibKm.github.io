@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Deathwish | Ideas in math, technology, and programming</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Deathwish" />
+<meta name="author" content="M." />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Ideas in math, technology, and programming" />
+<meta property="og:description" content="Ideas in math, technology, and programming" />
+<link rel="canonical" href="https://deathwish.info/" />
+<meta property="og:url" content="https://deathwish.info/" />
+<meta property="og:site_name" content="Deathwish" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Deathwish" />
+<script type="application/ld+json">
+{"description":"Ideas in math, technology, and programming","url":"https://deathwish.info/","@type":"WebSite","headline":"Deathwish","author":{"@type":"Person","name":"M."},"name":"Deathwish","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+  <meta name="referrer" content="no-referrer">
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+  <link rel="preload"
+      href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
+      integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X"
+      crossorigin="anonymous"
+      as="style">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Deathwish</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="home">
+
+
+  <ul class="post-list"><li>
+        <span class="post-meta">Jul 3, 2021 • 1 minute read</span>
+        <h1>
+          <a class="post-link" href="/2021/07/03/gsoc/">
+            GSoC 2021 and GNOME Design tools
+          </a>
+        </h1><p>This Google School of Code, I decided to work with <a href="https://belmoussaoui.com">Bilal Elmoussaoui</a> as a mentor, the goal being updating some GNOME design tools to GTK 4, specifically <a href="https://flathub.org/apps/details/org.gnome.design.IconLibrary">Icon Library</a> and <a href="https://flathub.org/apps/details/org.gnome.design.AppIconPreview">App Icon Preview</a>. Both apps are written in Rust and make use of the <a href="https://gtk-rs.org/">gtk-rs</a> bindings for gtk.</p>
+
+</li><li>
+        <span class="post-meta">Aug 1, 2020 • 3 minutes read</span>
+        <h1>
+          <a class="post-link" href="/2020/08/01/pgtk-nativecomp/">
+            Building GNU Emacs with pure GTK and native compilation
+          </a>
+        </h1><p>The idea of a pure GTK implementation of GNU Emacs was introduced, as far as I
+am aware, in <a href="https://lists.gnu.org/archive/html/emacs-devel/2016-10/msg00956.html">this
+thread</a> in
+the Emacs mail list. After a long time I found out a fork at
+<a href="https://github.com/masm11/emacs">masm11/emacs</a>, which brings proper GTK support
+and a separate fork at <a href="https://github.com/fejfighter/emacs">fejfighter/emacs</a>
+which can be rebased upstream, making possible a rebase onto the <code class="language-plaintext highlighter-rouge">native-comp</code>
+branch.</p>
+</li><li>
+        <span class="post-meta">Jul 19, 2020 • 9 minutes read</span>
+        <h1>
+          <a class="post-link" href="/2020/07/19/rust-stm32/">
+            Reading environmental data using embedded rust on STM32
+          </a>
+        </h1><p>There are valid concerns with embedded devices, specifically IoT devices,
+ranging from the use of secure communication protocols, to memory safety issues.
+This makes rust a natural choice of language to program embedded devices.</p>
+</li><li>
+        <span class="post-meta">Jul 18, 2020 • 6 minutes read</span>
+        <h1>
+          <a class="post-link" href="/2020/07/18/pyhole/">
+            Controlling your Pi-hole with async python GPIO
+          </a>
+        </h1><p>This project involves adding two buttons to your Raspberry Pi, one to disable
+Pi-hole for <code class="language-plaintext highlighter-rouge">n</code> seconds and the other to enable it back. I run many services on
+one Raspberry Pi and a dummy synchronous <code class="language-plaintext highlighter-rouge">while True</code> loop will lock one core,
+that isn’t going to fly.</p>
+</li><li>
+        <span class="post-meta">Jul 18, 2020 • 1 minute read</span>
+        <h1>
+          <a class="post-link" href="/2020/07/18/mu4e-secrets/">
+            Using libsecret to handle mu4e secrets
+          </a>
+        </h1><p>Usually people set their Emacs credentials on a <em>possible encrypted</em> <code class="language-plaintext highlighter-rouge">.authfile</code>. If
+your system uses the secret service for managing secrets, using it is a better
+alternative.</p>
+</li><li>
+        <span class="post-meta">Nov 15, 2019 • 4 minutes read</span>
+        <h1>
+          <a class="post-link" href="/2019/11/15/clifford/">
+            The Clifford algebra and Spin groups
+          </a>
+        </h1><p>Let \(g\) be an bilinear symmetric form on a real vector space \(V\).</p>
+</li><li>
+        <span class="post-meta">Nov 6, 2019 • 3 minutes read</span>
+        <h1>
+          <a class="post-link" href="/2019/11/06/picard/">
+            The Picard group of an elliptic variety
+          </a>
+        </h1><p>Let \(X = \mathbb{C} / \Lambda\), where \(\Lambda\) is the lattice generated by \(1,
+\tau \in \mathbb{C}\), for some \(\tau\) with \(\text{Im}(\tau) &gt; 0\). We want to show some explicit forms
+for the moduli space of line bundles over \(X\), the so called Picard group
+\(\text{Pic}(X)\). This moduli space is endowed with a group structure provided by tensor
+products, this post intends to give a brief exposition on the structure of the
+Picard groups and the Chern classes of elliptic curves.</p>
+</li><li>
+        <span class="post-meta">Nov 2, 2019 • 3 minutes read</span>
+        <h1>
+          <a class="post-link" href="/2019/11/02/cauchy-fourier/">
+            Cauchy theory and Fourier analysis
+          </a>
+        </h1><p>Suppose that \(f: U \to \mathbb{C}\) is a holomorphic function in an open set \(U
+\subseteq \mathbb{C}\) which is of class \(C^1(U)\) as a function defined on \(U
+\subseteq \mathbb{R}^2\), without loss of generality we can assume that the ball of radius \(R\) and center \(0\) is
+contained in \(U\), we can consider for any \(r &lt; R\) the function</p>
+</li><li>
+        <span class="post-meta">Oct 19, 2019 • 4 minutes read</span>
+        <h1>
+          <a class="post-link" href="/2019/10/19/mu4e/">
+            Using Emacs to read your email with ProtonMail
+          </a>
+        </h1><p>This guide will cover the basics on how to integrate Emacs with the ProtonMail using</p>
+</li><li>
+        <span class="post-meta">Oct 19, 2019 • 2 minutes read</span>
+        <h1>
+          <a class="post-link" href="/2019/10/19/codecs/">
+            Multimedia codecs in Fedora
+          </a>
+        </h1><p>Most codecs contain pieces of software which are not free or cannot be included
+in Fedora repositories, adding rpm-fusion’s repositories is required to for many
+codecs to work, we show methods on how to get codecs working in Fedora.</p>
+</li><li>
+        <span class="post-meta">Oct 26, 2017 • 6 minutes read</span>
+        <h1>
+          <a class="post-link" href="/2017/10/26/bi-inv/">
+            Bi-invariant metrics in a Lie group
+          </a>
+        </h1><p>Let \(G\) be Lie group, we denote by \(\mathfrak g\) it’s Lie algebra. Let \(L_x,R_x\) be the differentials of \(y \mapsto x\,y\) and \(y\mapsto y\,x^{-1}\) at
+the identity \(e \in G\).</p>
+</li><li>
+        <span class="post-meta">Mar 29, 2016 • 4 minutes read</span>
+        <h1>
+          <a class="post-link" href="/2016/03/29/L2-decomposition/">
+            L²(G) Decomposition for compact groups
+          </a>
+        </h1><p>Continuing the <a href="/2016/03/21/petterweyl/">previous post</a>, there are still much things to be said about the
+decomposition of the regular representation on \(L^2(G)\), by the
+Peter-Weyl theorem, there exist unique
+constants \(m_\pi \in \mathbb N\) such that</p>
+
+</li><li>
+        <span class="post-meta">Mar 21, 2016 • 6 minutes read</span>
+        <h1>
+          <a class="post-link" href="/2016/03/21/petterweyl/">
+            The Peter-Weyl Theorem
+          </a>
+        </h1><p>Let \(G\) be a locally compact topological group, this is a survey on some
+elementary results on the representation theory when \(G\) is compact.
+From now on are going to assume all groups compact and all the Hilbert spaces separable.</p>
+</li></ul>
+
+    </div>
+
+      </div>
+    </main>
+
+    <footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">M.</li>
+          <li><a class="u-email" href="mailto:contact@deathwish.info">contact@deathwish.info</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"></ul>
+</div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

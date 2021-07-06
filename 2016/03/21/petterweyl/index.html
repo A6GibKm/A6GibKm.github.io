@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>The Peter-Weyl Theorem | Deathwish</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="The Peter-Weyl Theorem" />
+<meta name="author" content="M." />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Let \(G\) be a locally compact topological group, this is a survey on some elementary results on the representation theory when \(G\) is compact. From now on are going to assume all groups compact and all the Hilbert spaces separable." />
+<meta property="og:description" content="Let \(G\) be a locally compact topological group, this is a survey on some elementary results on the representation theory when \(G\) is compact. From now on are going to assume all groups compact and all the Hilbert spaces separable." />
+<link rel="canonical" href="https://deathwish.info/2016/03/21/petterweyl/" />
+<meta property="og:url" content="https://deathwish.info/2016/03/21/petterweyl/" />
+<meta property="og:site_name" content="Deathwish" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2016-03-21T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="The Peter-Weyl Theorem" />
+<script type="application/ld+json">
+{"description":"Let \\(G\\) be a locally compact topological group, this is a survey on some elementary results on the representation theory when \\(G\\) is compact. From now on are going to assume all groups compact and all the Hilbert spaces separable.","url":"https://deathwish.info/2016/03/21/petterweyl/","@type":"BlogPosting","headline":"The Peter-Weyl Theorem","dateModified":"2016-03-21T00:00:00+00:00","datePublished":"2016-03-21T00:00:00+00:00","author":{"@type":"Person","name":"M."},"mainEntityOfPage":{"@type":"WebPage","@id":"https://deathwish.info/2016/03/21/petterweyl/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+  <meta name="referrer" content="no-referrer">
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+  <link rel="preload"
+      href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
+      integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X"
+      crossorigin="anonymous"
+      as="style">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Deathwish</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">The Peter-Weyl Theorem</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2016-03-21T00:00:00+00:00" itemprop="datePublished">
+        Mar 21, 2016 • 6 minutes read
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Let \(G\) be a locally compact topological group, this is a survey on some
+elementary results on the representation theory when \(G\) is compact.
+From now on are going to assume all groups compact and all the Hilbert spaces separable.</p>
+
+<p>Since \(G\) is compact by averaging any Radon measure on \(G\) we can construct a
+left invariant Haar measure \(dy\); i.e. one which satisfies</p>
+
+\[\int_G f(xy) dy = \int_G f(y)\,dy,\qquad f \in L^1(G,dy)\]
+
+<p>for all \(x\in G\). Without loss of generality one chooses \(dy\) to satisfy \(\int_G dy = 1\).</p>
+
+<p><!-- more --></p>
+
+<p>Given a strongly-continuous unitary representation \(\pi: G \to \mathcal{B}(\mathcal{H})\), we denote by \(Hom_G (\mathcal{H})\) the space of
+<em>intertwining</em> operators, that is, operators \(T: \mathcal{H} \to \mathcal{H}\) such
+that \(\pi(x)T = T \pi(x)\) for all the elements of our group. Analogously for two
+representations \(\pi_1,\pi_2\) we denote the space of intertwining operators by</p>
+
+\[Hom_{G}( \mathcal{H}_{\pi_1}; {\mathcal{H}}_{\pi_2}).\]
+
+<p>If \(\pi\) is a representation, we denote by
+\(\mathcal{H}_\pi\) the space on which \(G\) acts.</p>
+
+<blockquote>
+  <p><strong>Definition</strong>: A representation of \(G\) on a Hilbert space \(\mathcal{H}_\pi\) is called <em>irreducible</em> if \(\mathcal{H}_\pi\)
+does not have any non-trivial closed invariant subspace.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Definition</strong>: Two unitary representations are called equivalent if there exist an
+invertible intertwining operator between them, we denote this “equivalence
+relation” by \(\cong\).</p>
+</blockquote>
+
+<p>Since the group has a finite measure there is no harm in assuming all
+representations unitary. This is due to Weyl’s unitary trick; it consists of taking
+any inner product on the Space on which \(G\) acts and averaging it, i.e. defining
+a new inner product by formula</p>
+
+\[\langle u,v \rangle_G =\int_G\langle \pi(x)u,\pi(x)v \rangle\,dx.\]
+
+<p>What is obtained is a inner product for which \(\pi(x)\) is a unitary operator for
+every element \(x \in G\).</p>
+
+<p>We recall one of the fundamental result in representation theory.</p>
+
+<blockquote>
+  <p><strong>Theorem</strong>: (Schur’s Lemma) Let \(G\) be a locally compact group. A unitary
+representation of \(G\) is irreducible if and only if \(Hom_G(\mathcal{H},\mathcal{H})\)
+contains only multiples of the identity.</p>
+
+  <p>Suppose \(\pi_1,\pi_2\) are irreducible representations. Then either
+\(Hom_G(\mathcal{H}_{\pi_1}; \mathcal{H}_{\pi_2})\) is one dimensional and
+\(\pi_1 \cong \pi_2\), or, otherwise \(Hom_G(\mathcal{H}_{\pi_1}; \mathcal{H}_{\pi_2})\) is trivial.</p>
+</blockquote>
+
+<p><em>Proof</em>: Notice that both the kernel and the image of a non-zero intertwining
+operator \(U\) are invariant subspaces of \(\mathcal{H}\), consequently \(U\) is bijective. By the open mapping theorem \(U\) must be invertible
+in \(Hom_G(\mathcal{H},\mathcal{H})\), so the later is a Banach division algebra
+over \(\mathcal C\), by the Gelfand-Mazur theorem the only Banach algebra that satisfies
+this is \(\mathcal{C}\). To prove the second part of the statement,
+by the same arguments one checks that any nonzero intertwining operator must be
+an isomorphism, plus the observation that \(U^*U \in Hom_G(\mathcal{H}_{\pi_1})\)
+hence \(U = \lambda id_{\mathcal{H}_{\pi_1}}\) for some non zero constant
+\(\lambda \geq 0\), normalizing \(U\) one gets the desired unitary equivalence. If
+\(U,S \in Hom_G(\mathcal{H}_{\pi_1},\mathcal{H}_{\pi_2})\), then \(S^{-1}U \in
+Hom_G(\mathcal{H}_{\pi_1})\), therefore \(U\) and \(S\) must be multiples of each
+other. \(\square\)</p>
+
+<p>Let \(\pi\) be a representation of \(G\), given \(u,v \in \mathcal{H} = \mathcal{H}_\pi\) we define</p>
+
+\[Tu = \int_G \langle u,\pi(x) v \rangle\pi(x)v\,dx.\]
+
+<p>Since \(\langle Tu,u \rangle = \int_G \lvert \langle u,\pi(y)u \rangle\rvert^2 dy
+\geq 0\), \(T\) is a positive
+bounded operator in \(\mathcal{H}\), it is constructed in such a way that it intertwines
+\(\pi\) with itself, and it is non zero since \(Tv \not= 0\). If \(\pi\) is irreducible, then \(T\) must
+be a multiple of the identity, this is a key point since</p>
+
+<blockquote>
+  <p><strong>Proposition</strong>: \(T:\mathcal{H} \to \mathcal{H}\) is a compact self-adjoint
+intertwining operator.</p>
+</blockquote>
+
+<p><em>Proof</em>:
+\(G\) is compact so for any \(v \in \mathcal{H}\) the function \(\pi(x)v\) is uniformly
+continuous in \(x\). Let \(\varepsilon \ge 0\), we choose open sets \(V_1,\dots,V_n\) and
+\(x_i \in V_i\) such that for all \(i=1,\dots,n\):</p>
+
+\[\lVert \pi(x)v - \pi(x_i) \rVert\ \ge \varepsilon \qquad \forall x \in V_i .\]
+
+<p>Note that</p>
+
+\[\begin{aligned}
+\lVert \langle u,\pi(x)v \rangle\pi(x)v - \langle u,\pi(x_i)v \rangle\pi(x_i)v \rVert &amp;\\
+\leq&amp; \lVert \langle u, [\pi(x)v-\pi(x_i)v] \rangle\pi(x)v \rVert\\
+\qquad +&amp; \lVert \langle u,\pi(x_i)v \rangle
+[\pi(x)v-\pi(x_i)v]\rVert\\
+\leq&amp; \varepsilon \lVert u\rVert
+\end{aligned}\]
+
+<p>Define \(T_\varepsilon = \sum_{i=1}^n \int_{V_i} \langle  u,\pi(x_i)v \rangle\pi(x_i)v \,dx\),
+the range of this operator is spanned by \(\{ \pi(x_i)v \}_{i=1}^n\).
+The previous calculation shows that \(\lVert T - T_\varepsilon \rVert \le
+\varepsilon\) hence \(T\) can be approximated by finite range operators, in
+particular \(T\) is compact. \(\square\)</p>
+
+<blockquote>
+  <p><strong>Corollary</strong>: Every irreducible representation of a compact group is finite-dimensional.</p>
+</blockquote>
+
+<p>Now we have the main ingredients for the structure theorems of representations
+of compact groups.</p>
+
+<p>One comment before the main theorem. If \(\mathcal{H}\) is a representation of
+\(G\), then any invariant subspace \(E\) admits an orthogonal complement; i.e. since
+the representation is unitary \(E^\perp\) is also an invariant subspace and
+\(\mathcal{H} = E \oplus E^\perp\). If \(\mathcal{H}\) is finite-dimensional, one
+could continue to divide \(\mathcal{H}\) into smaller invariant subspaces, and
+eventually one ends with a decomposition of \(\mathcal{H}\) consisting only of
+irreducible subrepresentations. In the infinite-dimensional case this process
+can go on indefinitely, but the case of compact groups is very similar to the
+case when \(G\) is finite, more precisely.</p>
+
+<blockquote>
+  <p><strong>Theorem (Peter-Weyl Theorem)</strong>: Let \(\pi:G\to \mathcal{H}\) be a
+representation of a compact group. Then there exist irreducible invariant
+subspaces \(\{\mathcal{H}_i \}_{ i\in I}\) such that \(\mathcal{H} = \bigoplus_i
+\mathcal{H}_i.\)</p>
+</blockquote>
+
+<p><em>Proof</em>:
+As usual we are in need of the axiom of choice. We consider the partially ordered
+set (by inclusion)</p>
+
+\[\mathcal{C } = \{ \bigoplus_{i \in I} \mathcal{H}_i \mid \mathcal{H}_i \text{ is a
+closed irreducible invariant subspace
+of } \mathcal{H} \}.\]
+
+<p>Recall that \(T\) is a (non-zero) compact self-adjoint operator, by the spectral theorem, \(\mathcal{H}\)
+decomposes as the direct sum of its eigenspaces, with \(\ker(T-\lambda)\) being finite
+dimensional for \(\lambda \not= 0\), we fix one of those eigenspaces. Since the
+later is finite dimensional it can be decomposed as a sum of irreducible
+subspaces, so \(\mathcal{C}\) is not vacuous.
+It is clear that all chains in \(\mathcal{C}\) have an upper bound; So \(\mathcal{C}\) has a maximal
+element \(E = \oplus_i \mathcal{H}_i \in \mathcal{C}\). If we take \(v\in E^\perp\) and define \(Tu = \int \langle u,\pi(x)v
+\rangle\pi(x)v\,dx\) as before, repeating the previous argument one gets a new finite
+dimensional subspace of \(E^\perp\), which contradicts the maximality of \(E\); so
+\(E = \mathcal{H}\). \(\square\)</p>
+
+<p>Now given an arbitrary representation \(\mathcal{H}\) of \(G\), and a decomposition
+into irreducible representations \(\mathcal{H} = \bigoplus_i \mathcal{H}_i\); we can group
+equivalent representations in the decomposition, say</p>
+
+\[\mathcal{H} =
+\bigoplus_{\pi \in \widehat G} \left( \bigoplus_{\{ i:\mathcal{H}_i \cong
+\mathcal{H}_\pi \}} \mathcal{H}_i \right).\]
+
+<p>To put it another way we get an equivalent formulation.</p>
+
+<blockquote>
+  <p><strong>Theorem</strong>: Let \(\mathcal{H}\) be a representation of a compact group, then
+there exist constants \(m_\pi \in \mathbb N \cup \{ \infty\}\) such that
+\(\mathcal{H}\) decomposes as a direct sum of finite dimensional irreducible
+representations</p>
+
+\[\mathcal{H} \cong \bigoplus_{\pi \in \widehat G}\ m_\pi \cdot \mathcal{H}_\pi.\]
+</blockquote>
+
+  </div><a class="u-url" href="/2016/03/21/petterweyl/" hidden></a>
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">M.</li>
+          <li><a class="u-email" href="mailto:contact@deathwish.info">contact@deathwish.info</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"></ul>
+</div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

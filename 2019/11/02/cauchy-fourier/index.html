@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Cauchy theory and Fourier analysis | Deathwish</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Cauchy theory and Fourier analysis" />
+<meta name="author" content="M." />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Suppose that \(f: U \to \mathbb{C}\) is a holomorphic function in an open set \(U \subseteq \mathbb{C}\) which is of class \(C^1(U)\) as a function defined on \(U \subseteq \mathbb{R}^2\), without loss of generality we can assume that the ball of radius \(R\) and center \(0\) is contained in \(U\), we can consider for any \(r &lt; R\) the function" />
+<meta property="og:description" content="Suppose that \(f: U \to \mathbb{C}\) is a holomorphic function in an open set \(U \subseteq \mathbb{C}\) which is of class \(C^1(U)\) as a function defined on \(U \subseteq \mathbb{R}^2\), without loss of generality we can assume that the ball of radius \(R\) and center \(0\) is contained in \(U\), we can consider for any \(r &lt; R\) the function" />
+<link rel="canonical" href="https://deathwish.info/2019/11/02/cauchy-fourier/" />
+<meta property="og:url" content="https://deathwish.info/2019/11/02/cauchy-fourier/" />
+<meta property="og:site_name" content="Deathwish" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-11-02T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Cauchy theory and Fourier analysis" />
+<script type="application/ld+json">
+{"description":"Suppose that \\(f: U \\to \\mathbb{C}\\) is a holomorphic function in an open set \\(U \\subseteq \\mathbb{C}\\) which is of class \\(C^1(U)\\) as a function defined on \\(U \\subseteq \\mathbb{R}^2\\), without loss of generality we can assume that the ball of radius \\(R\\) and center \\(0\\) is contained in \\(U\\), we can consider for any \\(r &lt; R\\) the function","url":"https://deathwish.info/2019/11/02/cauchy-fourier/","@type":"BlogPosting","headline":"Cauchy theory and Fourier analysis","dateModified":"2019-11-02T00:00:00+00:00","datePublished":"2019-11-02T00:00:00+00:00","author":{"@type":"Person","name":"M."},"mainEntityOfPage":{"@type":"WebPage","@id":"https://deathwish.info/2019/11/02/cauchy-fourier/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+  <meta name="referrer" content="no-referrer">
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+  <link rel="preload"
+      href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
+      integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X"
+      crossorigin="anonymous"
+      as="style">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Deathwish</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Cauchy theory and Fourier analysis</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2019-11-02T00:00:00+00:00" itemprop="datePublished">
+        Nov 2, 2019 • 3 minutes read
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Suppose that \(f: U \to \mathbb{C}\) is a holomorphic function in an open set \(U
+\subseteq \mathbb{C}\) which is of class \(C^1(U)\) as a function defined on \(U
+\subseteq \mathbb{R}^2\), without loss of generality we can assume that the ball of radius \(R\) and center \(0\) is
+contained in \(U\), we can consider for any \(r &lt; R\) the function</p>
+
+\[F(r,\theta) = f(r e^{i \theta}), \qquad r &gt; 0,\ \theta \in [0, 2\pi).\]
+
+<p>The idea is to study the behavior of \(f\) in terms of the Fourier transform of
+\(F\) in its second variable and use this to prove Cauchy’s theorem. This is a
+well-understood fact that is not usually noted in a complex analysis course.</p>
+
+<!-- more -->
+
+<p>First let us note that by Cauchy’s identities \(f\) is holomorphic if and only if \(\overline{\partial} f
+= 0\) where, \(\overline{\partial} = \partial_x + i \partial_y\) and its derivative is given by \(\partial f = \partial_x f
+-i \partial_y f\).</p>
+
+<blockquote>
+  <p><strong>Proposition</strong>: If \(f\) is infinitely differentiable we have that \(f^{(k)}\) is
+also an holomorphic function for all \(k\geq 0\).</p>
+</blockquote>
+
+<p><em>Proof</em>: Note that \(\overline{\partial} \partial = \partial\overline{\partial}\)
+so in particular \(\overline{\partial} \partial^k f = \partial^k
+\overline{\partial}f = 0\).\(\square\)</p>
+
+<p>Using the chain rule</p>
+
+\[\begin{aligned}
+\partial_x &amp;= \cos(\theta)\partial_r - \frac{1}{r}\sin(\theta) \partial_\theta\\
+    \partial_y &amp;= \sin(\theta)\partial_r + \frac{1}{r}\cos(\theta) \partial_\theta
+\end{aligned}\]
+
+<p>and</p>
+
+\[\overline{\partial} = e^{i\theta}\left( \partial_r + \frac{i}{r} \partial_\theta\right).\]
+
+<p>So in particular for a holomorphic function \(F\), using the identities \(\widehat f' (k) = i\,k\,
+\widehat f(k)\) and \(\widehat{e^{i\theta} f(\theta)} (k) = \widehat f(k-1)\), we have</p>
+
+\[0 = \widehat {\overline{\partial}F}(r,k+1) = \partial_r \widehat{F} (r,k) -
+\frac{k}{r} \widehat{F}(r,k).\]
+
+<p>Note that here we need to use the fact that \(f\) is of class \(C^1\) to
+differentiate under the integral sign. If such \(F\) comes from an holomorphic function then, solving the differential
+equation given above, we get</p>
+
+\[\widehat{F}(r,k) = \frac{1}{\sqrt{2\pi}} \int_0^{2\pi} F(r,\theta) e^{-i k\theta}\,d\theta= C_k r^k,\]
+
+<p>for some constants \(C_k \in \mathbb{C}\), which are given by</p>
+
+\[C_k = r^{-k} \widehat{F}(r,k) = \frac{1}{\sqrt{2\pi}} r^{-k} \int_0^{2 \pi} f(re^{i k \theta}) e^{- i
+k \theta} d\theta,\]
+
+<p>Let us compute the Fourier inversion formula for \(F\),</p>
+
+\[F(r,\theta) = \frac{1}{\sqrt{2\pi}} \sum_{k=-\infty}^{\infty} \widehat{F}(r,k) e^{i k
+\theta} = \frac{1}{\sqrt{2\pi}} \sum_{k=-\infty}^{\infty} C_k r^k e^{i k \theta},\]
+
+<p>and let \(r_0 &lt; R\). If we do the substitution \(\gamma(\theta) = r_0 e^{i\theta}\),
+we obtain</p>
+
+\[a_k := \frac{1}{\sqrt{2\pi}} C_k = \frac{1}{2 \pi i}\int_{\gamma} \frac{f(w)}{w^{k+1}} dw.\]
+
+<p>Consider the function \(g(z) = \sum_k a_k z^k\) for any \(z\) with \(\vert z\rvert =
+r &lt; r_0\)
+then, since</p>
+
+\[\lvert a_k\rvert \leq \frac{C(r)}{r_0^k},\qquad C(r) = \sup_{\lvert z \rvert = r}\lvert f(z)\rvert\]
+
+<p>we have that</p>
+
+\[\sum_k \lvert a_k z^k \rvert &lt; C(r) \sum_k \left(\frac{r}{r_0} \right)^k &lt; \infty,\]
+
+<p>the series for \(g\) converges absolutely, so it is an analytic function and
+therefore holomorphic. A small computation shows that if \(G(r,\theta) =
+g(re^{i\theta})\) then for all \(k,r\) we have \(\widehat{F}(r,k) =
+\widehat{G}(r,k)\), so by uniqueness of the Fourier transform \(f=g\) for all \(r &lt;
+r_0\), since this analysis was done for arbitrary \(r_0 &lt; R\) we have that</p>
+
+\[f(z) = \sum_k a_k z^k, \qquad \lvert z \rvert &lt; R,\]
+
+<p>where by definition \(a_k = \frac{f^{(k)}(0)}{k!}\) and by our previous analysis we get</p>
+
+<blockquote>
+  <p><strong>Theorem</strong>: Let \(f\) be a holomorphic function of class \(C^1\) on a disk of radius \(R &gt; 0\)
+around \(0\). Then \(f\) is infinitely
+differentiable and for all \(k \geq 0\) we have for all \(r &lt; R\)</p>
+
+\[f^{(k)}(0) = \frac{k!}{2 \pi i}\int_{\gamma} \frac{f(w)}{w^{k+1}}\,dw,\]
+
+  <p>where \(\gamma\) is the closed loop given by \(\gamma(\theta) = re^{i\theta}\).</p>
+</blockquote>
+
+<p>This analysis shows that in fact holomorphic functions are the same as analytic
+functions under the mild hypothesis that their first derivative is continuous.</p>
+
+<blockquote>
+  <p><strong>Corollary</strong>: Let \(f:U \to \mathbb{C}\) be a holomorphic function of class \(C^1(U)\), then \(f\)
+is analytic on any ball contained in \(U\).</p>
+</blockquote>
+
+  </div><a class="u-url" href="/2019/11/02/cauchy-fourier/" hidden></a>
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">M.</li>
+          <li><a class="u-email" href="mailto:contact@deathwish.info">contact@deathwish.info</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"></ul>
+</div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

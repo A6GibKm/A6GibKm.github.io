@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Bi-invariant metrics in a Lie group | Deathwish</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Bi-invariant metrics in a Lie group" />
+<meta name="author" content="M." />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Let \(G\) be Lie group, we denote by \(\mathfrak g\) it’s Lie algebra. Let \(L_x,R_x\) be the differentials of \(y \mapsto x\,y\) and \(y\mapsto y\,x^{-1}\) at the identity \(e \in G\)." />
+<meta property="og:description" content="Let \(G\) be Lie group, we denote by \(\mathfrak g\) it’s Lie algebra. Let \(L_x,R_x\) be the differentials of \(y \mapsto x\,y\) and \(y\mapsto y\,x^{-1}\) at the identity \(e \in G\)." />
+<link rel="canonical" href="https://deathwish.info/2017/10/26/bi-inv/" />
+<meta property="og:url" content="https://deathwish.info/2017/10/26/bi-inv/" />
+<meta property="og:site_name" content="Deathwish" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-10-26T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Bi-invariant metrics in a Lie group" />
+<script type="application/ld+json">
+{"description":"Let \\(G\\) be Lie group, we denote by \\(\\mathfrak g\\) it’s Lie algebra. Let \\(L_x,R_x\\) be the differentials of \\(y \\mapsto x\\,y\\) and \\(y\\mapsto y\\,x^{-1}\\) at the identity \\(e \\in G\\).","url":"https://deathwish.info/2017/10/26/bi-inv/","@type":"BlogPosting","headline":"Bi-invariant metrics in a Lie group","dateModified":"2017-10-26T00:00:00+00:00","datePublished":"2017-10-26T00:00:00+00:00","author":{"@type":"Person","name":"M."},"mainEntityOfPage":{"@type":"WebPage","@id":"https://deathwish.info/2017/10/26/bi-inv/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+  <meta name="referrer" content="no-referrer">
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+  <link rel="preload"
+      href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
+      integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X"
+      crossorigin="anonymous"
+      as="style">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Deathwish</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Bi-invariant metrics in a Lie group</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2017-10-26T00:00:00+00:00" itemprop="datePublished">
+        Oct 26, 2017 • 6 minutes read
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Let \(G\) be Lie group, we denote by \(\mathfrak g\) it’s Lie algebra. Let \(L_x,R_x\) be the differentials of \(y \mapsto x\,y\) and \(y\mapsto y\,x^{-1}\) at
+the identity \(e \in G\).</p>
+
+<p>A bi-invariant metric on \(G\) is a Riemannian metric on \(G\) such that \(\langle X , Y \rangle_x = \langle L_y R_z X , L_y R_z Y \rangle_{yxz^{-1}}\)
+for all \(x,y,z \in G\) and \(X,Y \in T_x G\). We begin by characterizing such metrics.</p>
+
+<!-- more -->
+
+<blockquote>
+  <p><strong>Proposition 1</strong> There is a correspondence between bi-invariant metrics on \(G\) and Ad-invariant scalar products on it’s Lie algebra.</p>
+</blockquote>
+
+<p><em>Proof</em>: Given a scalar product \(\langle\ ,\ \rangle_e\) on \(\mathfrak g\) we
+define (using the same notation) on \(T_g G\) a scalar product \(\langle X , Y \rangle_g = \langle L_{g^{-1}} X, L_{g^{-1}} Y \rangle_e\), this is a left-invariant metric on \(G\), now given \(X,Y \in T_xG\) then given two vectors tangent at \(x\),</p>
+
+\[\begin{aligned}\langle R_y X, R_y Y \rangle_{xy^{-1}} &amp;= \langle Ad_y
+L_{x^{-1}} X, Ad_y L_{x^{-1}}Y\rangle_e \\ &amp;= \langle L_{x^{-1}} X,
+L_{x^{-1}}Y\rangle_e \\ &amp;= \langle X, Y \rangle_x\end{aligned}.\]
+
+<p>Conversely, if we start with a bi-invariant metric, it is easy to see that it’s restriction to the Lie
+Algebra is a Ad-invariant. \(\Box\)</p>
+
+<p>It turns out that for connected Lie groups, bi-invariant metrics on \(G\) are actually the same as ad-invariant scalar products on it’s Lie Algebra –those who satisfy \(\langle [X,Y],Z\rangle + \langle Y,[X,Z]\rangle = 0\), indeed</p>
+
+\[\frac d {dt} \langle Ad_{exp(tX)} Y , Ad_{exp(tX)}Z \rangle \rvert_{t = s} =
+\langle [X,Ad_{exp(sX)}Y], Z \rangle + \langle Ad_{exp(sX)}Y, [X,Z]\rangle\]
+
+<p>Since the image of the exponential map, generates the connected component of the
+identity, one invariance gives the other.</p>
+
+<h2 id="a-little-of-riemannian-geometry">A Little of Riemannian Geometry</h2>
+
+<p>The Riemannian connection on a manifold is uniquely determined by the formula</p>
+
+\[\begin{array}{rcl}
+\langle \nabla_X Y,Z \rangle &amp;=&amp; \frac 1 2 \{ X\langle Y,Z\rangle + Y\langle
+X,Z\rangle - Z\langle X,Y\rangle \\
+&amp;&amp; - \langle [Y,Z],X \rangle - \langle [Y,Z],X
+\rangle -\langle [Y,X],Z \rangle \}
+\end{array}\]
+
+<p>In the case of a Lie group with a bi-invariant metric, since everything is
+constant along \(G\) the terms of the form \(X\langle Y,Z\rangle\) vanish,
+and using the fact that the bracket of two left-invariant vector coincides with
+the left-invariant vector coming from \([X_e,Y_e]\in \mathfrak g\), the formula
+above implies that for left-invariant vector fields \(X,Y\) we have</p>
+
+\[\nabla_X Y = \frac 1 2 [X,Y]\ .\]
+
+<p>Note that by the previous formula one parameter subgroups are geodesics,
+conversely given any geodesic \(\gamma\), such that \(\gamma(0) = x, \dot
+\gamma(0) = L_xX\) for \(X \in \mathfrak g\), then \(\alpha(t) = x \exp( tX)\) is
+a path such that, \(\dot \alpha(t) =L_x X (\exp(tX)) = X (\alpha (t))\) then by
+uniqueness \(\alpha = \gamma\), so geodesics starting at the identity are in
+1-1 correspondence with one parameter subgroups, in particular those are defined
+for all \(t \in \mathbb R\) so the existence of a bi-invariant metric implies
+that \(G\) is a complete Riemannian manifold.</p>
+
+<p>In particular using Jacobi identity, the tensor curvature becomes</p>
+
+\[R(X,Y)Z =\nabla_{[X,Y]} Z - [\nabla_X,\nabla_Y ] Z = \frac 1 4 [[X,Y],Z]\]
+
+<p>Choosing orthogonal vector fields, the sectional curvature is</p>
+
+\[K(X,Y) = \langle R(X,Y)X, Y \rangle = \frac 1 4 \langle [X,Y],[X,Y] \rangle
+\geq 0\]
+
+<p>For a unitary vector \(X\) we choose an orthonormal basis \(\{Z_1= X, Z_2 \dots , Z_n\}\) of \(\mathfrak g\), And the Ricci curvature becomes</p>
+
+\[\text{Ric}_x (X) = \sum_{i=1}^n K(X,Z_i) =-\frac 1 4 \sum_{i=1}^n \langle
+[X,[X,Z_i],Z_i\rangle = -\frac 1 4 \text{tr}(ad_X ad_X).\]
+
+<p>So what does it means to have a bi-invariant metric? it’s easier to start with a ad-invariant scalar product, the most important example of a bi-linear form on a Lie Algebra which is ad-invariant –an the only example in the semisimple case– is the Killing form, defined by</p>
+
+\[k(X,Y) = \text{tr}( ad_X ad_Y)\]
+
+<p>this won’t be a scalar product, since it’s non degenerate if and only if the algebra is semi simple nor is going to be positive definite, but there is a special case, namely Compact Lie Algebras, where by definition the Killing form is negative definite. One remark is that since the Killing form is ad-invariant, every ideal has a orthogonal complement, so we have a decomposition \(\mathfrak g = Z(\mathfrak g) \oplus [ \mathfrak g , \mathfrak g ]\), where \(Z(\mathfrak g)\) is the sum of the 1-dimensional ideals and \([ \mathfrak g , \mathfrak g ]\) is semisimple, in particular the killing form is non degenerate in that ideal</p>
+
+<blockquote>
+  <p><strong>Proposition 2</strong>: A compact Lie Group admits an bi-invariant metric.</p>
+</blockquote>
+
+<p><em>Proof</em>: given any scalar product \(\langle , \rangle_0\) on \(\mathfrak g\), choose a Haar measure on \(G\) then define</p>
+
+\[\forall\ X,Y \in {\mathfrak g} \qquad \langle X, Y \rangle = \int_G \langle Ad_g
+X, Ad_g Y \rangle_0 dg\]
+
+<p>this is clearly a Ad-invariant scalar product on \(\mathfrak g\), so it defines a bi invariant metric on \(G\). \(\Box\)</p>
+
+<blockquote>
+  <p><strong>Proposition 3</strong>: A Lie Group with discrete center is compact iff it’s Lie Algebra is compact.</p>
+</blockquote>
+
+<p><em>Proof</em>: If the Group is compact, by the previous proposition there is a ad-invariant scalar product on the Lie algebra on which \(ad_X\) is skew-symmetric hence it has only pure imaginary eigenvalues, so the Killing form is negative semi-definite, since it is degenerate exactly on \(Z(\mathfrak g) = 0\), then it must be negative definite. Conversely if the Lie algebra is compact, the Killing form is negative definite on \(\mathfrak g = [\mathfrak g, \mathfrak g]\) so taking it’s negative, we have a bi-invariant metric on \(G\), for \(k\) is negative definite using Bonnet Myers Theorem \(G\) must be compact. \(\Box\)</p>
+
+<p>As a corollary, the universal cover must be also compact and the fundamental group of \(G\) must be finite.
+with small modifications we have the following theorem</p>
+
+<blockquote>
+  <p><strong>Theorem 4</strong>: A Lie algebra is compact if and only if it is the Lie algebra of a compact simply connected semisimple Lie Group The Killing Form on a Lie Algebra is negative semidefinite if and only if it is the Lie Algebra of a product of a Euclidean space and a compact simply connected semisimple Lie Group</p>
+</blockquote>
+
+<p>In particular every compact Lie group must be a quotient, by a discrete subgroup of</p>
+
+\[\mathbb T ^n \times K_1 \times \dots \times K_m\]
+
+<p>where all the \(K_i\)’s are simply connected compact simple Lie groups. there is a theorem who states that any Lie Groups deformation retracts into a maximal compact subgroup, combining that and the fact that cover maps induce isomorphisms on the fundamental groups \(\pi_n\) for \(n \geq 2\) we have</p>
+
+<blockquote>
+  <p><strong>Proposition 5</strong>: For any Lie Group \(\pi_2(G)\) is trivial.</p>
+</blockquote>
+
+<p><em>Proof</em>: we only have to check the list of simple simply connected compact Lie groups, these are \(SU(n)\) and \(SO(n)\), using the fibrations</p>
+
+\[SO(n-1) \rightarrow SO(n) \rightarrow S^n\]
+
+\[SU(n-1) \rightarrow SU(n) \rightarrow S^{2n-1},\]
+
+<p>it’s easy to show that \(\pi_2\) is trivial, it left as an exercise to check the same for the compact exceptional groups. \(\Box\)</p>
+
+  </div><a class="u-url" href="/2017/10/26/bi-inv/" hidden></a>
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">M.</li>
+          <li><a class="u-email" href="mailto:contact@deathwish.info">contact@deathwish.info</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"></ul>
+</div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Multimedia codecs in Fedora | Deathwish</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Multimedia codecs in Fedora" />
+<meta name="author" content="M." />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Most codecs contain pieces of software which are not free or cannot be included in Fedora repositories, adding rpm-fusion’s repositories is required to for many codecs to work, we show methods on how to get codecs working in Fedora." />
+<meta property="og:description" content="Most codecs contain pieces of software which are not free or cannot be included in Fedora repositories, adding rpm-fusion’s repositories is required to for many codecs to work, we show methods on how to get codecs working in Fedora." />
+<link rel="canonical" href="https://deathwish.info/2019/10/19/codecs/" />
+<meta property="og:url" content="https://deathwish.info/2019/10/19/codecs/" />
+<meta property="og:site_name" content="Deathwish" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-10-19T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Multimedia codecs in Fedora" />
+<script type="application/ld+json">
+{"description":"Most codecs contain pieces of software which are not free or cannot be included in Fedora repositories, adding rpm-fusion’s repositories is required to for many codecs to work, we show methods on how to get codecs working in Fedora.","url":"https://deathwish.info/2019/10/19/codecs/","@type":"BlogPosting","headline":"Multimedia codecs in Fedora","dateModified":"2019-10-19T00:00:00+00:00","datePublished":"2019-10-19T00:00:00+00:00","author":{"@type":"Person","name":"M."},"mainEntityOfPage":{"@type":"WebPage","@id":"https://deathwish.info/2019/10/19/codecs/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+  <meta name="referrer" content="no-referrer">
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+  <link rel="preload"
+      href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
+      integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X"
+      crossorigin="anonymous"
+      as="style">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Deathwish</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Multimedia codecs in Fedora</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2019-10-19T00:00:00+00:00" itemprop="datePublished">
+        Oct 19, 2019 • 2 minutes read
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Most codecs contain pieces of software which are not free or cannot be included
+in Fedora repositories, adding rpm-fusion’s repositories is required to for many
+codecs to work, we show methods on how to get codecs working in Fedora.</p>
+
+<!-- more -->
+
+<h2 id="enabling-rpm-fusion-repositories">Enabling rpm-fusion repositories</h2>
+
+<ul>
+  <li>Fedora (22 and later):</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+</code></pre></div></div>
+
+<ul>
+  <li>Silverblue (29 and later):</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo rpm-ostree install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+</code></pre></div></div>
+
+<p>See <a href="https://rpmfusion.org/Configuration">rpmfusion.org/Configuration</a>.</p>
+
+<h2 id="option-a-minimal-setup">Option A: Minimal setup</h2>
+
+<p>A minimal setup to run Firefox consists of</p>
+
+<ul>
+  <li>Fedora: <code class="language-plaintext highlighter-rouge">sudo dnf install ffmpeg-libs</code></li>
+  <li>Silverblue: <code class="language-plaintext highlighter-rouge">sudo rpm-ostree install ffmpeg-libs</code></li>
+</ul>
+
+<p>This is enough to view YouTube and to browse Reddit, see <a href="https://www.youtube.com/html5">Youtube’s HTML5 test</a>.</p>
+
+<h2 id="option-b-alternative-minimal-setup">Option B: Alternative Minimal setup</h2>
+
+<p>Alternatively one can use the packages <code class="language-plaintext highlighter-rouge">ffmpeg</code> and Cisco’s h264 codecs
+<code class="language-plaintext highlighter-rouge">mozilla-openh264, gstreamer1-plugin-openh264</code>, the later are in the
+<code class="language-plaintext highlighter-rouge">fedora-cisco-openh264</code> repository which can be enabled via</p>
+
+<ul>
+  <li>Fedora: <code class="language-plaintext highlighter-rouge">sudo dnf config-manager --set-enabled fedora-cisco-openh264</code></li>
+  <li>Silverblue: edit the file <code class="language-plaintext highlighter-rouge">/etc/yum.repos.d/fedora-cisco-openh264.repo</code> and
+set <code class="language-plaintext highlighter-rouge">enabled</code>’s value to <code class="language-plaintext highlighter-rouge">1</code></li>
+</ul>
+
+<h2 id="option-c-complete-suite-of-codecs">Option C: Complete suite of codecs</h2>
+
+<p>To install the complete suite of multimedia codecs:</p>
+
+<ul>
+  <li>Fedora: <code class="language-plaintext highlighter-rouge">sudo dnf groupupdate Multimedia</code></li>
+</ul>
+
+<p>This won’t do anything if rpm-fusion’s repositories are not enabled.</p>
+
+<h2 id="vlc-and-gnome-videos">VLC and GNOME Videos</h2>
+
+<p>While the previous method is perfectly fine for running VLC, it is more
+advisable
+to install VLC via Flatpak. This Flatpak comes bundled with all necessary codecs and
+dependencies by default.</p>
+
+<p>First add <a href="https://www.flathub.org/home">Flathub</a> repository:</p>
+
+<p><code class="language-plaintext highlighter-rouge">flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo</code></p>
+
+<p>Then install VLC via:</p>
+
+<p><code class="language-plaintext highlighter-rouge">flatpak install flathub org.videolan.VLC</code></p>
+
+<p>Alternatively, you can install GNOME Videos:</p>
+
+<p><code class="language-plaintext highlighter-rouge">flatpak install flathub org.gnome.Totem</code></p>
+
+<h2 id="firefox-flatpak">Firefox flatpak</h2>
+
+<p>If you are using the <a href="https://flathub.org/apps/details/org.mozilla.firefox">official Firefox Flatpak</a>, which can be installed via</p>
+
+<p><code class="language-plaintext highlighter-rouge">flatpak install flathub org.mozilla.firefox</code></p>
+
+<p>then you don’t need any additional codecs. If you rather use ffmpeg codecs
+instead of openh264, install the ffmpeg Flatpak extension version:</p>
+
+<p><code class="language-plaintext highlighter-rouge">flatpak install org.freedesktop.Platform.ffmpeg-full</code></p>
+
+<p>which matches the runtime of <code class="language-plaintext highlighter-rouge">org.mozilla.firefox</code>, which is usually the latest.</p>
+
+  </div><a class="u-url" href="/2019/10/19/codecs/" hidden></a>
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">M.</li>
+          <li><a class="u-email" href="mailto:contact@deathwish.info">contact@deathwish.info</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"></ul>
+</div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

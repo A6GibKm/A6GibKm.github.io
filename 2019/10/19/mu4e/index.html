@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Using Emacs to read your email with ProtonMail | Deathwish</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Using Emacs to read your email with ProtonMail" />
+<meta name="author" content="M." />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="This guide will cover the basics on how to integrate Emacs with the ProtonMail using" />
+<meta property="og:description" content="This guide will cover the basics on how to integrate Emacs with the ProtonMail using" />
+<link rel="canonical" href="https://deathwish.info/2019/10/19/mu4e/" />
+<meta property="og:url" content="https://deathwish.info/2019/10/19/mu4e/" />
+<meta property="og:site_name" content="Deathwish" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-10-19T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Using Emacs to read your email with ProtonMail" />
+<script type="application/ld+json">
+{"description":"This guide will cover the basics on how to integrate Emacs with the ProtonMail using","url":"https://deathwish.info/2019/10/19/mu4e/","@type":"BlogPosting","headline":"Using Emacs to read your email with ProtonMail","dateModified":"2019-10-19T00:00:00+00:00","datePublished":"2019-10-19T00:00:00+00:00","author":{"@type":"Person","name":"M."},"mainEntityOfPage":{"@type":"WebPage","@id":"https://deathwish.info/2019/10/19/mu4e/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+  <meta name="referrer" content="no-referrer">
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+  <link rel="preload"
+      href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
+      integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X"
+      crossorigin="anonymous"
+      as="style">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Deathwish</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Using Emacs to read your email with ProtonMail</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2019-10-19T00:00:00+00:00" itemprop="datePublished">
+        Oct 19, 2019 • 4 minutes read
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>This guide will cover the basics on how to integrate Emacs with the ProtonMail using</p>
+
+<ul>
+  <li><a href="https://www.djcbsoftware.nl/code/mu/mu4e.html">mu4e</a></li>
+  <li>mbsync</li>
+  <li>smtpmail</li>
+  <li><a href="https://protonmail.com/bridge/">ProtonMail Bridge</a></li>
+</ul>
+
+<p>How to install them:</p>
+
+<ul>
+  <li>Fedora: <code class="language-plaintext highlighter-rouge">sudo dnf install isync maildir-utils</code></li>
+  <li>Debian: <code class="language-plaintext highlighter-rouge">sudo apt install isync maildir-utils</code></li>
+</ul>
+
+<!-- more -->
+
+<h2 id="installing-protonmail-bridge-via-flatpak">Installing ProtonMail Bridge via Flatpak</h2>
+
+<p>First add <a href="https://www.flathub.org/home">Flathub</a> Flatpak repository:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+</code></pre></div></div>
+
+<p>Then install <code class="language-plaintext highlighter-rouge">protonmail-bridge</code> via:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>flatpak install flathub ch.protonmail.protonmail-bridge
+</code></pre></div></div>
+
+<h2 id="configuring-mbsync">Configuring mbsync</h2>
+
+<p>Create a configuration file <code class="language-plaintext highlighter-rouge">~/.mbsyncrc</code> for mbsync</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">IMAPAccount</span> <span class="n">protonmail</span>
+<span class="n">Host</span> <span class="m">127</span>.<span class="m">0</span>.<span class="m">0</span>.<span class="m">1</span>
+<span class="n">Port</span> <span class="m">1143</span>
+<span class="n">PassCmd</span> <span class="s2">"gpg -q --for-your-eyes-only --no-tty -d ~/.authinfo.gpg | awk 'FNR == 1 {print $8}'"</span>
+<span class="n">SSLType</span> <span class="n">STARTTLS</span>
+<span class="n">SSLVersions</span> <span class="n">TLSv1</span>.<span class="m">2</span>
+<span class="n">CertificateFile</span> ~/.<span class="n">config</span>/<span class="n">protonmail</span>/<span class="n">bridge</span>/<span class="n">cert</span>.<span class="n">pem</span>
+
+<span class="n">IMAPStore</span> <span class="n">remote</span>
+<span class="n">Account</span> <span class="n">protonmail</span>
+
+<span class="c">#You can change .mail to something else
+</span><span class="n">MaildirStore</span> <span class="n">local</span>
+<span class="n">Path</span> ~/.<span class="n">mail</span>/
+<span class="n">Inbox</span> ~/.<span class="n">mail</span>/<span class="n">INBOX</span>/
+
+<span class="n">Channel</span> <span class="n">inbox</span>
+<span class="n">Master</span> :<span class="n">remote</span>:
+<span class="n">Slave</span> :<span class="n">local</span>:
+<span class="n">Patterns</span> *
+<span class="n">Create</span> <span class="n">Both</span>
+<span class="n">Expunge</span> <span class="n">Both</span>
+<span class="n">SyncState</span> *
+
+<span class="n">Group</span> <span class="n">protonmail</span>
+<span class="n">Channel</span> <span class="n">inbox</span>
+</code></pre></div></div>
+
+<h2 id="alternative-using-offlineimap">(Alternative) Using offlineimap</h2>
+
+<p>Alternatively install <code class="language-plaintext highlighter-rouge">offlineimap</code> with the following config at <code class="language-plaintext highlighter-rouge">~/.offlineimaprc</code></p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ~/.offlineimaprc
+</span>
+[<span class="n">general</span>]
+<span class="n">accounts</span> = <span class="n">protonmail</span>
+<span class="n">pythonfile</span> = ~/.<span class="n">config</span>/<span class="n">offlineimap</span>/<span class="n">keyring</span>.<span class="n">py</span>
+<span class="n">metadata</span> = ~/.<span class="n">cache</span>/<span class="n">offlineimap</span>
+
+[<span class="n">Account</span> <span class="n">protonmail</span>]
+<span class="n">remoterepository</span> = <span class="n">protonmail</span>-<span class="n">remote</span>
+<span class="n">localrepository</span> = <span class="n">protonmail</span>-<span class="n">local</span>
+
+[<span class="n">Repository</span> <span class="n">protonmail</span>-<span class="n">local</span>]
+<span class="n">type</span> = <span class="n">Maildir</span>
+<span class="n">localfolders</span> = ~/.<span class="n">mail</span>
+<span class="n">sync_deletes</span> = <span class="n">no</span>
+
+[<span class="n">Repository</span> <span class="n">protonmail</span>-<span class="n">remote</span>]
+<span class="n">expunge</span> = <span class="n">yes</span>
+<span class="n">type</span> = <span class="n">IMAP</span>
+<span class="n">remotehost</span> = <span class="m">127</span>.<span class="m">0</span>.<span class="m">0</span>.<span class="m">1</span>
+<span class="n">remoteport</span>= <span class="m">1143</span>
+<span class="n">remoteuser</span> = <span class="n">USERNAME</span>@<span class="n">protonmail</span>.<span class="n">com</span>
+<span class="n">remotepasseval</span> = <span class="n">get_password</span>(<span class="s2">"USERNAME@protonmail.com"</span>)
+<span class="c"># Alternatively, use
+# remotepass = &lt;YOUR BRIDGE-SPECIFIC PASSWORD&gt;
+</span><span class="n">nametrans</span> = <span class="n">lambda</span> <span class="n">foldername</span>: <span class="n">re</span>.<span class="n">sub</span> (<span class="s1">'^Folders.'</span>, <span class="s1">''</span>, <span class="n">foldername</span>)
+<span class="n">folderfilter</span> = <span class="n">lambda</span> <span class="n">foldername</span>: <span class="n">foldername</span> <span class="n">not</span> <span class="n">in</span> [<span class="s1">'All Mail'</span>]
+<span class="n">ssl</span> = <span class="n">no</span> <span class="c"># ssl is broken.
+</span><span class="n">starttls</span> = <span class="n">yes</span>
+<span class="n">ssl_version</span> = <span class="n">tls1_2</span>
+<span class="n">sslcacertfile</span> = ~/.<span class="n">config</span>/<span class="n">protonmail</span>/<span class="n">bridge</span>/<span class="n">cert</span>.<span class="n">pem</span>
+</code></pre></div></div>
+
+<p>Where one possible script is</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+# ~/.config/offlineimap/keyring.py
+</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<span class="k">def</span> <span class="nf">get_password</span><span class="p">(</span><span class="n">login</span><span class="p">):</span>
+    <span class="n">machine</span> <span class="o">=</span> <span class="s">"127.0.0.1"</span>
+    <span class="n">port</span> <span class="o">=</span> <span class="s">"1143"</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s">"machine %s port %s login %s password ([^ ]*)</span><span class="se">\n</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span>
+        <span class="n">machine</span><span class="p">,</span>
+        <span class="n">port</span><span class="p">,</span>
+        <span class="n">login</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nb">compile</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">authinfo</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">popen</span><span class="p">(</span>
+        <span class="s">"gpg -q --no-tty -d ~/.authinfo.gpg"</span>
+    <span class="p">).</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">p</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">authinfo</span><span class="p">).</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>Note</strong>: offlineimap depends on Python 2.7 which is deprecated.</p>
+
+<h2 id="logging-credentials">Logging credentials</h2>
+
+<p>Next we need to create a file to log our credentials for sending mail with smtpmail. Create a file <code class="language-plaintext highlighter-rouge">~/.authinfo</code> with the following contents:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>machine 127.0.0.1 port 1143 login USERNAME@protonmail.com password BRIDGE_PASSWORD
+machine 127.0.0.1 port 1025 login USERNAME@protonmail.com password BRIDGE_PASSWORD
+</code></pre></div></div>
+
+<p>You should encrypt it, one option is to use <code class="language-plaintext highlighter-rouge">epa</code> in Emacs
+<code class="language-plaintext highlighter-rouge">M-x epa-encrypt-file</code>.
+Another is to set a symmetric encryption that will require some password
+<code class="language-plaintext highlighter-rouge">$ gpg --symetric .authinfo</code>. Finally, delete <code class="language-plaintext highlighter-rouge">.authinfo</code>.</p>
+
+<p>Now to get/sync you mail, run on a terminal <code class="language-plaintext highlighter-rouge">$ mbsync protonmail</code>.</p>
+
+<h2 id="configuring-mu4e">Configuring mu4e</h2>
+
+<p>This is a minimal configuration that you should include in your <code class="language-plaintext highlighter-rouge">init.el</code> configuration file.</p>
+
+<div class="language-lisp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="nb">require</span> <span class="ss">'mu4e</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">setq</span> <span class="nv">mu4e-maildir</span> <span class="s">"~/.mail"</span>
+    <span class="nv">mu4e-attachment-dir</span> <span class="s">"~/Downloads"</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">setq</span> <span class="nv">user-mail-address</span> <span class="s">"USERNAME_HERE@protonmail.com"</span>
+    <span class="nv">user-full-name</span>  <span class="s">"YOUR_NAME"</span><span class="p">)</span>
+
+<span class="c1">;; Get mail</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">mu4e-get-mail-command</span> <span class="s">"mbsync protonmail"</span>
+    <span class="nv">mu4e-change-filenames-when-moving</span> <span class="no">t</span>   <span class="c1">; needed for mbsync</span>
+    <span class="nv">mu4e-update-interval</span> <span class="mi">120</span><span class="p">)</span>             <span class="c1">; update every 2 minutes</span>
+
+<span class="c1">;; Send mail</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">message-send-mail-function</span> <span class="ss">'smtpmail-send-it</span>
+    <span class="nv">smtpmail-auth-credentials</span> <span class="s">"~/.authinfo.gpg"</span>
+    <span class="nv">smtpmail-smtp-server</span> <span class="s">"127.0.0.1"</span>
+    <span class="nv">smtpmail-stream-type</span> <span class="ss">'starttls</span>
+    <span class="nv">smtpmail-smtp-service</span> <span class="mi">1025</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nv">add-to-list</span> <span class="ss">'gnutls-trustfiles</span>
+    <span class="p">(</span><span class="nv">expand-file-name</span> <span class="s">"~/.config/protonmail/bridge/cert.pem"</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>To index your emails from the terminal run <code class="language-plaintext highlighter-rouge">mu index --maildir=~/.mail</code>.</p>
+
+<p>Now just launch <code class="language-plaintext highlighter-rouge">M-x mu4e</code> from Emacs to read your mail.</p>
+
+  </div><a class="u-url" href="/2019/10/19/mu4e/" hidden></a>
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">M.</li>
+          <li><a class="u-email" href="mailto:contact@deathwish.info">contact@deathwish.info</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"></ul>
+</div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
