@@ -8,7 +8,6 @@ theme: theme
 
 plugins:
   - jekyll-seo-tag
-  - jekyll-time-to-read
 
 exclude:
   - vendor

@@ -23,6 +23,9 @@ md-theme:
 sass:
   style: compressed
 
+plugins:
+  - jekyll-sitemap
+
 markdown: kramdown
 
 exclude:
