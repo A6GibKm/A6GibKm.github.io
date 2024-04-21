@@ -1,6 +1,9 @@
 title: Maximiliano
+description: Personal website
 gitlab_username: msandova
 github_username: A6GibKm
+email: contact@maximiliano.cc
+url: "https://maximiliano.cc"
 
 theme: theme
 permalink: pretty
@@ -8,6 +11,19 @@ show_excerpts: true
 
 author:
   name: Maximiliano
+  email: contact@maximiliano.cc
+
+md-theme:
+  social_links:
+    github: A6GibKm
+    gitlab:
+      - instance: gitlab.gnome.org
+        username: msandova
+
+sass:
+  style: compressed
+
+markdown: kramdown
 
 exclude:
   - vendor

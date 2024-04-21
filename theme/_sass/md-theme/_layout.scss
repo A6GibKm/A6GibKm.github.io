@@ -309,8 +309,6 @@ p.abstract {
     a {
       display: block;
       padding: calc($spacing-unit / 4);
-      border: 1px solid $border-color-01;
-      &:hover { border-color: $border-color-02 }
     }
   }
 }
