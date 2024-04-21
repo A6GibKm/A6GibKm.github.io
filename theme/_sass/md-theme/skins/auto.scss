@@ -16,13 +16,13 @@ $lm-brand-color-dark:      darken($lm-brand-color, 25%) !default;
 
 $lm-site-title-color:      $lm-brand-color-dark !default;
 
-$lm-text-color:            #111111 !default;
-$lm-background-color:      #fdfdfd !default;
+$lm-text-color:            rgba(0, 0, 0, 0.8) !default;
+$lm-background-color:      #fafafa !default;
 $lm-code-background-color: #eeeeff !default;
 
-$lm-link-base-color:       #2a7ae2 !default;
-$lm-link-visited-color:    darken($lm-link-base-color, 15%) !default;
-$lm-link-hover-color:      $lm-text-color !default;
+$lm-link-base-color:       #1c71d8 !default;
+$lm-link-visited-color:    mix($lm-link-base-color, #ffffff, 80%) !default;
+$lm-link-hover-color:      lighten($lm-link-base-color, 15%) !default;
 
 $lm-border-color-01:       $lm-brand-color-light !default;
 $lm-border-color-02:       lighten($lm-brand-color, 35%) !default;
@@ -112,12 +112,12 @@ $dm-brand-color-dark:      darken($dm-brand-color, 35%) !default;
 
 $dm-site-title-color:      $dm-brand-color-light !default;
 
-$dm-text-color:            #f6f5f4 !default;
-$dm-background-color:      darken(#2C323C, 2%) !default;
+$dm-text-color:            #ffffff !default;
+$dm-background-color:      #242424 !default;
 $dm-code-background-color: #deddda !default;
 
-$dm-link-base-color:       #99c1f1 !default;
-$dm-link-visited-color:    darken($dm-link-base-color, 15%) !default;
+$dm-link-base-color:       #78aeed !default;
+$dm-link-visited-color:    mix($dm-link-base-color, $dm-text-color, 80%) !default;
 $dm-link-hover-color:      lighten($dm-link-base-color, 15%) !default;
 
 $dm-border-color-01:       $dm-brand-color-dark !default;
