@@ -4,7 +4,7 @@ layout: default
 
 # Maximiliano Sandoval R.
 
-### Ph.D. in Mathematics from Pontificia Universidad Católica
+### Ph.D. in Mathematics and Software developer
 
 ## Publications
 
