@@ -4,5 +4,5 @@
 ---
 
 @import
-    "md-theme/skins/{{ site.minima.skin | default: 'classic' }}",
+    "md-theme/skins/{{ site.minima.skin | default: 'auto' }}",
     "md-theme/initialize";
